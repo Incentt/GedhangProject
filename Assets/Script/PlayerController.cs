@@ -77,6 +77,8 @@ public class PlayerController : MonoBehaviour, IPlayerController
 
     private float _frameLeftGrounded = float.MinValue;
     private bool _grounded;
+    private bool _onJumpableSurface;
+    private bool _wasOnJumpableSurface;
 
     private void CheckCollisions()
     {
@@ -86,8 +88,14 @@ public class PlayerController : MonoBehaviour, IPlayerController
         bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _stats.GrounderDistance, ~_stats.PlayerLayer);
         bool ceilingHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, _stats.GrounderDistance, ~_stats.PlayerLayer);
 
+        // Check if we're on a jumpable surface
+        bool jumpableGroundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _stats.GrounderDistance, _stats.JumpableLayers);
+
         // Hit a Ceiling
         if (ceilingHit) _frameVelocity.y = Mathf.Min(0, _frameVelocity.y);
+
+        // Update jumpable surface status
+        _onJumpableSurface = jumpableGroundHit;
 
         // Landed on the Ground
         if (!_grounded && groundHit)
@@ -103,6 +111,8 @@ public class PlayerController : MonoBehaviour, IPlayerController
         {
             _grounded = false;
             _frameLeftGrounded = _time;
+            _wasOnJumpableSurface = _onJumpableSurface;
+            _onJumpableSurface = false;
             GroundedChanged?.Invoke(false, 0);
         }
 
@@ -121,7 +131,8 @@ public class PlayerController : MonoBehaviour, IPlayerController
     private float _timeJumpWasPressed;
 
     private bool HasBufferedJump => _bufferedJumpUsable && _time < _timeJumpWasPressed + _stats.JumpBuffer;
-    private bool CanUseCoyote => _coyoteUsable && !_grounded && _time < _frameLeftGrounded + _stats.CoyoteTime;
+    private bool CanUseCoyote => _coyoteUsable && !_grounded && _time < _frameLeftGrounded + _stats.CoyoteTime && _wasOnJumpableSurface;
+    private bool CanJump => (_grounded && _onJumpableSurface) || CanUseCoyote;
 
     private void HandleJump()
     {
@@ -129,7 +140,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
 
         if (!_jumpToConsume && !HasBufferedJump) return;
 
-        if (_grounded || CanUseCoyote) ExecuteJump();
+        if (CanJump) ExecuteJump();
 
         _jumpToConsume = false;
     }

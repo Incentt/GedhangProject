@@ -16,6 +16,9 @@ public class PlayerStats : ScriptableObject
     [Tooltip("Set this to the layer your player is on")]
     public LayerMask PlayerLayer;
 
+    [Tooltip("Layers that the player can jump from. Only surfaces on these layers will allow jumping")]
+    public LayerMask JumpableLayers;
+
     [Header("INPUT")]
     [Tooltip("Makes all Input snap to an integer. Prevents gamepads from walking slowly. Recommended value is true to ensure gamepad/keybaord parity.")]
     public bool SnapInput = true;
