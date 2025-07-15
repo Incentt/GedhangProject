@@ -12,24 +12,30 @@ public class PlayerAnimatorController : MonoBehaviour
     }
     public void PlayRunAnimation()
     {
-        if (anim != null)
+        if (anim != null && anim.runtimeAnimatorController != null)
         {
             anim.SetBool("isRunning", true);
         }
     }
     public void PlayIdleAnimation()
     {
-        if (anim != null)
+        if (anim != null && anim.runtimeAnimatorController != null)
         {
             anim.SetBool("isRunning", false);
         }
     }
     public void PlayJumpAnimation()
     {
-        if (anim != null)
+        if (anim != null && anim.runtimeAnimatorController != null)
         {
-            anim.SetTrigger("jump");
+            anim.Play("Jump");
         }
     }
-
+    public void PlayLandAnimation()
+    {
+        if (anim != null && anim.runtimeAnimatorController != null)
+        {
+            anim.Play("Land");
+        }
+    }
 }

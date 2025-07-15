@@ -108,6 +108,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
             _coyoteUsable = true;
             _bufferedJumpUsable = true;
             _endedJumpEarly = false;
+            animController.PlayLandAnimation();
             GroundedChanged?.Invoke(true, Mathf.Abs(_frameVelocity.y));
         }
         // Left the Ground
@@ -145,6 +146,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
         if (!_jumpToConsume && !HasBufferedJump) return;
 
         if (CanJump) ExecuteJump();
+        animController.PlayJumpAnimation();
 
         _jumpToConsume = false;
     }
@@ -156,9 +158,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
         _bufferedJumpUsable = false;
         _coyoteUsable = false;
         _frameVelocity.y = _stats.JumpPower;
-        animController.PlayJumpAnimation();
         Jumped?.Invoke();
-
     }
 
     #endregion
@@ -166,7 +166,6 @@ public class PlayerController : MonoBehaviour, IPlayerController
     #region Horizontal
     private void HandleDirection()
     {
-        _spriteRenderer.flipX = _frameVelocity.x < 0;
         if (_frameInput.Move.x == 0)
         {
             animController.PlayIdleAnimation();
@@ -175,6 +174,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
         }
         else
         {
+            _spriteRenderer.flipX = _frameVelocity.x < 0;
             animController.PlayRunAnimation();
             _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * _stats.MaxSpeed, _stats.Acceleration * Time.fixedDeltaTime);
         }
