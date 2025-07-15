@@ -31,18 +31,11 @@ public class PlayerAnimatorController : MonoBehaviour
             anim.SetTrigger("jump");
         }
     }
-    public void SetOnLand()
+    public void PlayLandAnimation()
     {
         if (anim != null && anim.runtimeAnimatorController != null)
         {
-            anim.SetBool("land", true);
-        }
-    }
-    public void SetOffLand()
-    {
-        if (anim != null && anim.runtimeAnimatorController != null)
-        {
-            anim.SetBool("land", false);
+            anim.SetTrigger("land");
         }
     }
 }

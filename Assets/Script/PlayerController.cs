@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
             _endedJumpEarly = false;
 
             GroundedChanged?.Invoke(true, Mathf.Abs(_frameVelocity.y));
-            animController.SetOnLand();
+            animController.PlayLandAnimation();
         }
         // Left the Ground
         else if (_grounded && !groundHit)
@@ -122,7 +122,6 @@ public class PlayerController : MonoBehaviour, IPlayerController
             _onJumpableSurface = false;
             _wasInAir = true; // Mark that player is now in air
             GroundedChanged?.Invoke(false, 0);
-            animController.SetOffLand();
         }
 
         Physics2D.queriesStartInColliders = _cachedQueryStartInColliders;
