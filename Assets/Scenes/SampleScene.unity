@@ -359,7 +359,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: c97cb360cffde4d2b8d961c6d33390c9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -453,10 +453,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa58ceedcb44046169580574ec5c125d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _firstObject: {fileID: 1075981100}
-  _secondObject: {fileID: 1378959051}
-  _ropeSegmentPrefab: {fileID: 7425892364039644071, guid: 0273913edd64e46ddbec61ee5cbb1dfa, type: 3}
-  _ropeLengthDefault: 4
+  player1: {fileID: 1075981100}
+  player2: {fileID: 1378959051}
+  ropeSegmentPrefab: {fileID: 7425892364039644071, guid: 0273913edd64e46ddbec61ee5cbb1dfa, type: 3}
+  ropeSegmentCountHalved: 10
+  distancePerSegment: 0.1
+  ropeLengthDefault: 4
 --- !u!4 &219675765
 Transform:
   m_ObjectHideFlags: 0
@@ -612,7 +614,6 @@ GameObject:
   m_Component:
   - component: {fileID: 472384984}
   - component: {fileID: 472384986}
-  - component: {fileID: 472384985}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -635,18 +636,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &472384985
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 472384983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 747045847a1014c81ac7df4ae0d7c1c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!120 &472384986
 LineRenderer:
   serializedVersion: 2
@@ -1045,7 +1034,7 @@ SpringJoint2D:
   m_GameObject: {fileID: 1075981100}
   m_Enabled: 1
   serializedVersion: 4
-  m_EnableCollision: 0
+  m_EnableCollision: 1
   m_ConnectedRigidBody: {fileID: 1653363379}
   m_BreakForce: Infinity
   m_BreakTorque: Infinity
