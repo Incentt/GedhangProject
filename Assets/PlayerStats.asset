@@ -17,7 +17,7 @@ MonoBehaviour:
     m_Bits: 128
   JumpableLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 192
   SnapInput: 1
   VerticalDeadZoneThreshold: 0.3
   HorizontalDeadZoneThreshold: 0.1
@@ -26,7 +26,7 @@ MonoBehaviour:
   GroundDeceleration: 60
   AirDeceleration: 30
   GroundingForce: -1.5
-  GrounderDistance: 0.05
+  GrounderDistance: 0.2
   JumpPower: 18
   MaxFallSpeed: 30
   FallAcceleration: 40

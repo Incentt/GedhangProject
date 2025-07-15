@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1c7d2dd2533e84b0f88c067ed4319185
+guid: b9016344989794acaaf81cbab01fc27b
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,43 +123,85 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Dal_jump_0
+      name: Dal_idle_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 775.5
+        width: 773.75
         height: 980
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bb1dd1590f0864098a9a740a9396da71
-      internalID: 1986533718
+      spriteID: 3b9e56632235649178daa1d3b20ec194
+      internalID: 405144469
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dal_jump_1
+      name: Dal_idle_1
       rect:
         serializedVersion: 2
-        x: 775
+        x: 771
         y: 0
-        width: 775.5
+        width: 774
         height: 980
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f306f8a6d2e7d4b54acdf05077a3e3aa
-      internalID: -1816206003
+      spriteID: 8ec3d267295f1438faabc63d3273ea7b
+      internalID: 1919177402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dal_idle_2
+      rect:
+        serializedVersion: 2
+        x: 1546
+        y: 0
+        width: 773.75
+        height: 980
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0bd389f3e7d7a45899eb04b2fbb4385d
+      internalID: -2138382628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dal_idle_3
+      rect:
+        serializedVersion: 2
+        x: 2319
+        y: 0
+        width: 773.75
+        height: 980
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0074ac0dc77b24596b2692f6258f7c7e
+      internalID: -390336032
       vertices: []
       indices: 
       edges: []
@@ -175,8 +217,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Dal_jump_0: 1986533718
-      Dal_jump_1: -1816206003
+      Dal_idle_0: 405144469
+      Dal_idle_1: 1919177402
+      Dal_idle_2: -2138382628
+      Dal_idle_3: -390336032
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

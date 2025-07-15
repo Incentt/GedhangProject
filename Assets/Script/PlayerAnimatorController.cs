@@ -28,14 +28,14 @@ public class PlayerAnimatorController : MonoBehaviour
     {
         if (anim != null && anim.runtimeAnimatorController != null)
         {
-            anim.Play("Jump");
+            anim.SetTrigger("jump");
         }
     }
     public void PlayLandAnimation()
     {
         if (anim != null && anim.runtimeAnimatorController != null)
         {
-            anim.Play("Land");
+            anim.SetTrigger("land");
         }
     }
 }

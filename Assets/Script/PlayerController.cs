@@ -83,6 +83,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
     private bool _grounded;
     private bool _onJumpableSurface;
     private bool _wasOnJumpableSurface;
+    private bool _wasInAir;
 
     private void CheckCollisions()
     {
@@ -108,7 +109,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
             _coyoteUsable = true;
             _bufferedJumpUsable = true;
             _endedJumpEarly = false;
-            animController.PlayLandAnimation();
+
             GroundedChanged?.Invoke(true, Mathf.Abs(_frameVelocity.y));
         }
         // Left the Ground
@@ -118,10 +119,16 @@ public class PlayerController : MonoBehaviour, IPlayerController
             _frameLeftGrounded = _time;
             _wasOnJumpableSurface = _onJumpableSurface;
             _onJumpableSurface = false;
+            _wasInAir = true; // Mark that player is now in air
             GroundedChanged?.Invoke(false, 0);
         }
 
         Physics2D.queriesStartInColliders = _cachedQueryStartInColliders;
+    }
+
+    private void OnLanding()
+    {
+        animController.PlayLandAnimation();
     }
 
     #endregion
@@ -202,6 +209,14 @@ public class PlayerController : MonoBehaviour, IPlayerController
 
     private void ApplyMovement() => _rb.velocity = _frameVelocity;
 
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if ((_stats.JumpableLayers.value & (1 << collision.gameObject.layer)) != 0)
+        {
+            Debug.Log("Player landed on a jumpable surface.");
+            OnLanding();
+        }
+    }
 #if UNITY_EDITOR
     private void OnValidate()
     {
