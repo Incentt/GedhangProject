@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
 {
     public PlayerType PlayerType;
     [SerializeField] private PlayerStats _stats;
+    private PlayerAnimatorController animController;
 
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
@@ -19,6 +20,8 @@ public class PlayerController : MonoBehaviour, IPlayerController
     public Vector2 FrameInput => _frameInput.Move;
     public event Action<bool, float> GroundedChanged;
     public event Action Jumped;
+    private SpriteRenderer _spriteRenderer;
+
 
     #endregion
 
@@ -28,7 +31,8 @@ public class PlayerController : MonoBehaviour, IPlayerController
     {
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<CapsuleCollider2D>();
-
+        animController = GetComponent<PlayerAnimatorController>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
     }
 
@@ -152,22 +156,26 @@ public class PlayerController : MonoBehaviour, IPlayerController
         _bufferedJumpUsable = false;
         _coyoteUsable = false;
         _frameVelocity.y = _stats.JumpPower;
+        animController.PlayJumpAnimation();
         Jumped?.Invoke();
+
     }
 
     #endregion
 
     #region Horizontal
-
     private void HandleDirection()
     {
+        _spriteRenderer.flipX = _frameVelocity.x < 0;
         if (_frameInput.Move.x == 0)
         {
+            animController.PlayIdleAnimation();
             var deceleration = _grounded ? _stats.GroundDeceleration : _stats.AirDeceleration;
             _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
         }
         else
         {
+            animController.PlayRunAnimation();
             _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * _stats.MaxSpeed, _stats.Acceleration * Time.fixedDeltaTime);
         }
     }
