@@ -33,12 +33,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6516156528185290934, guid: 50b2650f7dd4a4c87a03dcd5dbce0786, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 315858829, guid: 6cf912dd8d85e4a52a60fbf2146986c5, type: 3}
+    - target: {fileID: 6516156528185290934, guid: 50b2650f7dd4a4c87a03dcd5dbce0786, type: 3}
       propertyPath: m_Color.b
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6516156528185290934, guid: 50b2650f7dd4a4c87a03dcd5dbce0786, type: 3}
       propertyPath: m_Color.g
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6516156528185290934, guid: 50b2650f7dd4a4c87a03dcd5dbce0786, type: 3}
       propertyPath: m_Color.r
@@ -84,9 +88,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6973413788703341489, guid: 50b2650f7dd4a4c87a03dcd5dbce0786, type: 3}
-      propertyPath: PlayerType
-      value: 2
+    - target: {fileID: 7039175294281707613, guid: 50b2650f7dd4a4c87a03dcd5dbce0786, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 15f35f2ae13a847269af71faa33b2cb0, type: 2}
+    - target: {fileID: 8889125866517402135, guid: 50b2650f7dd4a4c87a03dcd5dbce0786, type: 3}
+      propertyPath: m_Size.y
+      value: 1.9569659
+      objectReference: {fileID: 0}
+    - target: {fileID: 8889125866517402135, guid: 50b2650f7dd4a4c87a03dcd5dbce0786, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.69552684
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
