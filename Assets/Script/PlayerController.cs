@@ -1,5 +1,7 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Android;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class PlayerController : MonoBehaviour, IPlayerController
@@ -77,20 +79,36 @@ public class PlayerController : MonoBehaviour, IPlayerController
     private void CheckCollisions()
     {
         // Ground and Ceiling
-        bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _stats.GrounderDistance, ~_stats.PlayerLayer);
-        bool ceilingHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, _stats.GrounderDistance, ~_stats.PlayerLayer);
+        bool ceilingIsHit = Physics2D.CapsuleCast(new Vector2(_col.bounds.center.x, _col.bounds.center.y + _stats.GroundAndCeilingCheckOffset), _col.size, _col.direction, 0, Vector2.up, _stats.GroundAndCeilingCheckDistance, ~_stats.PlayerLayer);
+
+        RaycastHit2D leftGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.min.x, _col.bounds.min.y - _stats.GroundAndCeilingCheckOffset), Vector2.down, _stats.GroundAndCeilingCheckDistance);
+        RaycastHit2D centerGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.center.x, _col.bounds.min.y - _stats.GroundAndCeilingCheckOffset), Vector2.down, _stats.GroundAndCeilingCheckDistance);
+        RaycastHit2D rightGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.max.x, _col.bounds.min.y - _stats.GroundAndCeilingCheckOffset), Vector2.down, _stats.GroundAndCeilingCheckDistance);
+
+        Debug.DrawRay(leftGroundHit.point, Vector2.down * _stats.GroundAndCeilingCheckDistance, Color.green);
+        Debug.DrawRay(centerGroundHit.point, Vector2.down * _stats.GroundAndCeilingCheckDistance, Color.green);
+        Debug.DrawRay(rightGroundHit.point, Vector2.down * _stats.GroundAndCeilingCheckDistance, Color.green);
+
+        float distanceFromPivot = GetComponent<Renderer>().bounds.size.y/2 + _stats.GroundAndCeilingCheckOffset + _stats.GroundAndCeilingCheckDistance; // Using CapsuleCollider2D (your current setup)
+        RaycastHit2D groundHitFromPivot = Physics2D.Raycast(transform.position, Vector2.down, distanceFromPivot, ~_stats.PlayerLayer);
+        Debug.DrawRay(transform.position, Vector2.down * distanceFromPivot, Color.red);
+
+        bool groundIsHit = centerGroundHit.collider != null || leftGroundHit.collider != null || rightGroundHit.collider != null;
+
+        // Align the player's rotation to the ground normal
+        AlignRotationToGroundNormal(groundHitFromPivot);
 
         // Check if we're on a jumpable surface
-        bool jumpableGroundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _stats.GrounderDistance, _stats.JumpableLayers);
+        bool jumpableGroundIsHit = Physics2D.CapsuleCast(new Vector2(_col.bounds.center.x, _col.bounds.center.y - _stats.GroundAndCeilingCheckOffset), _col.size, _col.direction, 0, Vector2.down, _stats.GroundAndCeilingCheckDistance, _stats.JumpableLayers);
 
         // Hit a Ceiling
-        if (ceilingHit) _rb.velocity = new Vector2(_rb.velocity.x, Mathf.Min(0, _rb.velocity.y));
+        if (ceilingIsHit) _rb.velocity = new Vector2(_rb.velocity.x, Mathf.Min(0, _rb.velocity.y));
 
         // Update jumpable surface status
-        _onJumpableSurface = jumpableGroundHit;
+        _onJumpableSurface = jumpableGroundIsHit;
 
         // Landed on the Ground
-        if (!_grounded && groundHit)
+        if (!_grounded && groundIsHit)
         {
             _grounded = true;
             _coyoteUsable = true;
@@ -101,13 +119,40 @@ public class PlayerController : MonoBehaviour, IPlayerController
             animController.PlayLandAnimation();
         }
         // Left the Ground
-        else if (_grounded && !groundHit)
+        else if (_grounded && !groundIsHit)
         {
             _grounded = false;
             _frameLeftGrounded = _time;
             _wasOnJumpableSurface = _onJumpableSurface;
             _onJumpableSurface = false;
             GroundedChanged?.Invoke(false, 0);
+        }
+    }
+
+    private void AlignRotationToGroundNormal(RaycastHit2D groundHit)
+    {
+
+        // Get the target rotation
+        Quaternion targetRot = Quaternion.identity;
+        
+        if (groundHit.collider != null)
+        {
+            targetRot = Quaternion.FromToRotation(Vector3.up, groundHit.normal);
+        }
+        
+        // Apply rotation
+        if (targetRot == Quaternion.identity)
+        {
+            transform.rotation = targetRot;
+        }
+        else
+        {
+            // Need to fix: jitter when in between 2 grounds normals
+            transform.rotation = Quaternion.Lerp(
+                transform.rotation, 
+                targetRot, 
+                Time.deltaTime * _stats.StandBasedOnNormalLerpAmount
+            );
         }
     }
 

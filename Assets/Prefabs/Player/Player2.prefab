@@ -48,6 +48,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6516156528185290934, guid: 50b2650f7dd4a4c87a03dcd5dbce0786, type: 3}
+      propertyPath: m_SpriteSortPoint
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6862952370451706371, guid: 50b2650f7dd4a4c87a03dcd5dbce0786, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -96,6 +100,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 404c4bffe0081447191386da8a4ba7e9, type: 2}
+    - target: {fileID: 8804273472350029333, guid: 50b2650f7dd4a4c87a03dcd5dbce0786, type: 3}
+      propertyPath: m_Constraints
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 8889125866517402135, guid: 50b2650f7dd4a4c87a03dcd5dbce0786, type: 3}
       propertyPath: m_Size.x
       value: 0.9841606

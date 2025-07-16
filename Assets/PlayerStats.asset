@@ -29,7 +29,9 @@ MonoBehaviour:
   AirResistance: 0.9
   VelocityPower: 0.9
   GroundingGravityScaleModifier: 3
-  GrounderDistance: 0.3
+  GroundAndCeilingCheckDistance: 0.2
+  GroundAndCeilingCheckOffset: 0.1
+  StandBasedOnNormalLerpAmount: 20
   JumpPower: 300
   MaxFallSpeed: 40
   InAirGravityScaleModifier: 4

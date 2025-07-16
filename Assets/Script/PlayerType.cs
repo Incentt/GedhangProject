@@ -53,8 +53,14 @@ public class PlayerStats : ScriptableObject
     [Tooltip("Gravity scale multiplier when grounded. Helps on slopes")]
     public float GroundingGravityScaleModifier = 5f;
 
-    [Tooltip("The detection distance for grounding and roof detection"), Range(0f, 0.5f)]
-    public float GrounderDistance = 0.2f;
+    [Tooltip("The detection distance for grounding and roof"), Range(0f, 0.5f)]
+    public float GroundAndCeilingCheckDistance = 0.2f;
+
+    [Tooltip("The offset detection distance for grounding and roof"), Range(0f, 0.5f)]
+    public float GroundAndCeilingCheckOffset = 0.1f;
+
+    [Tooltip("Lerp amount for standing based on normal")]
+    public float StandBasedOnNormalLerpAmount = 20f;
 
     [Header("JUMP")]
     [Tooltip("The immediate velocity applied when jumping")]
