@@ -63,7 +63,7 @@ public class RopeManager : MonoBehaviour
 
     private void Update()
     {
-        DrawRope();
+        UpdateRope();
     }
     private void InitializePlayer()
     {
@@ -130,9 +130,10 @@ public class RopeManager : MonoBehaviour
                 _ropeSegments.Reverse();
             }
         }
+        StartCoroutine(EnablePlayer2JointDelayed(player2.GetComponent<DistanceJoint2D>()));
     }
 
-    private void DrawRope()
+    private void UpdateRope()
     {
         if (_lineRenderer == null)
         {
@@ -157,18 +158,18 @@ public class RopeManager : MonoBehaviour
 
     private void UpdateRopeDistancePerSegments()
     {
-        foreach (GameObject ropeSegment in _ropeSegments)
-        {
-            if (ropeSegment.GetComponent<DistanceJoint2D>() != null)
-            {
-                ropeSegment.GetComponent<DistanceJoint2D>().distance = distancePerSegment;
-            }
-        }
+        // foreach (GameObject ropeSegment in _ropeSegments)
+        // {
+        //     if (ropeSegment.GetComponent<DistanceJoint2D>() != null)
+        //     {
+        //         ropeSegment.GetComponent<DistanceJoint2D>().distance = distancePerSegment;
+        //     }
+        // }
 
-        foreach (GameObject objTarget in new GameObject[] { player1, player2 })
-        {
-            objTarget.GetComponent<DistanceJoint2D>().distance = distancePerSegment;
-        }
+        // foreach (GameObject objTarget in new GameObject[] { player1, player2 })
+        // {
+        //     objTarget.GetComponent<DistanceJoint2D>().distance = distancePerSegment;
+        // }
     }
 
     private int GetTotalRopeSegmentCount()
@@ -186,5 +187,18 @@ public class RopeManager : MonoBehaviour
         }
 
         player1.GetComponent<SpringJoint2D>().distance = distance;
+    }
+    private IEnumerator EnablePlayer2JointDelayed(DistanceJoint2D joint)
+    {
+        yield return new WaitForFixedUpdate();
+        joint.enabled = false;
+        yield return new WaitForFixedUpdate();
+        joint.enabled = true;
+
+        // Also reset the connected body
+        Rigidbody2D connectedRb = joint.connectedBody;
+        joint.connectedBody = null;
+        yield return new WaitForFixedUpdate();
+        joint.connectedBody = connectedRb;
     }
 }
