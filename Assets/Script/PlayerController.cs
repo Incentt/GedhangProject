@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 
-
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class PlayerController : MonoBehaviour, IPlayerController
 {
@@ -12,12 +11,11 @@ public class PlayerController : MonoBehaviour, IPlayerController
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
     private FrameInput _frameInput;
-    private Vector2 _frameVelocity;
     private bool _cachedQueryStartInColliders;
 
     #region Interface
 
-    public Vector2 FrameInput => _frameInput.Move;
+    public float FrameInput => _frameInput.MoveHorizontal;
     public event Action<bool, float> GroundedChanged;
     public event Action Jumped;
     private SpriteRenderer _spriteRenderer;
@@ -33,9 +31,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
         _col = GetComponent<CapsuleCollider2D>();
         animController = GetComponent<PlayerAnimatorController>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
     }
-
     private void Update()
     {
         _time += Time.deltaTime;
@@ -50,13 +46,12 @@ public class PlayerController : MonoBehaviour, IPlayerController
         {
             JumpDown = Input.GetButtonDown("Jump" + playerNumber),
             JumpHeld = Input.GetButton("Jump" + playerNumber),
-            Move = new Vector2(Input.GetAxisRaw("Horizontal" + playerNumber), Input.GetAxisRaw("Vertical" + playerNumber))
+            MoveHorizontal = Input.GetAxisRaw("Horizontal" + playerNumber)
         };
 
         if (_stats.SnapInput)
         {
-            _frameInput.Move.x = Mathf.Abs(_frameInput.Move.x) < _stats.HorizontalDeadZoneThreshold ? 0 : Mathf.Sign(_frameInput.Move.x);
-            _frameInput.Move.y = Mathf.Abs(_frameInput.Move.y) < _stats.VerticalDeadZoneThreshold ? 0 : Mathf.Sign(_frameInput.Move.y);
+            _frameInput.MoveHorizontal = Mathf.Abs(_frameInput.MoveHorizontal) < _stats.HorizontalDeadZoneThreshold ? 0 : Mathf.Sign(_frameInput.MoveHorizontal);
         }
 
         if (_frameInput.JumpDown)
@@ -69,26 +64,21 @@ public class PlayerController : MonoBehaviour, IPlayerController
     private void FixedUpdate()
     {
         CheckCollisions();
-
         HandleJump();
         HandleDirection();
-        HandleGravity();
-
-        ApplyMovement();
+        ApplyFriction();
+        ApplyAirResistance();
+        HandleGravityScale();
     }
 
-    #region Collisions
-
+    #region Collision
     private float _frameLeftGrounded = float.MinValue;
     private bool _grounded;
     private bool _onJumpableSurface;
     private bool _wasOnJumpableSurface;
-    private bool _wasInAir;
 
     private void CheckCollisions()
     {
-        Physics2D.queriesStartInColliders = false;
-
         // Ground and Ceiling
         bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _stats.GrounderDistance, ~_stats.PlayerLayer);
         bool ceilingHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, _stats.GrounderDistance, ~_stats.PlayerLayer);
@@ -97,7 +87,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
         bool jumpableGroundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _stats.GrounderDistance, _stats.JumpableLayers);
 
         // Hit a Ceiling
-        if (ceilingHit) _frameVelocity.y = Mathf.Min(0, _frameVelocity.y);
+        if (ceilingHit) _rb.velocity = new Vector2(_rb.velocity.x, Mathf.Min(0, _rb.velocity.y));
 
         // Update jumpable surface status
         _onJumpableSurface = jumpableGroundHit;
@@ -110,7 +100,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
             _bufferedJumpUsable = true;
             _endedJumpEarly = false;
 
-            GroundedChanged?.Invoke(true, Mathf.Abs(_frameVelocity.y));
+            GroundedChanged?.Invoke(true, Mathf.Abs(_rb.velocity.y));
             animController.PlayLandAnimation();
         }
         // Left the Ground
@@ -120,16 +110,11 @@ public class PlayerController : MonoBehaviour, IPlayerController
             _frameLeftGrounded = _time;
             _wasOnJumpableSurface = _onJumpableSurface;
             _onJumpableSurface = false;
-            _wasInAir = true; // Mark that player is now in air
             GroundedChanged?.Invoke(false, 0);
         }
-
-        Physics2D.queriesStartInColliders = _cachedQueryStartInColliders;
     }
 
-
     #endregion
-
 
     #region Jumping
 
@@ -161,63 +146,100 @@ public class PlayerController : MonoBehaviour, IPlayerController
         _timeJumpWasPressed = 0;
         _bufferedJumpUsable = false;
         _coyoteUsable = false;
-        _frameVelocity.y = _stats.JumpPower;
+        _rb.AddForce(new Vector2(_rb.velocity.x, _stats.JumpPower), ForceMode2D.Impulse);
         Jumped?.Invoke();
     }
 
     #endregion
 
-    #region Horizontal
+    #region Movement
     private void HandleDirection()
     {
-        if (_frameInput.Move.x == 0)
+        // if (_frameInput.MoveHorizontal == 0)
+        // {
+        //     animController.PlayIdleAnimation();
+        //     var deceleration = _grounded ? _stats.GroundDeceleration : _stats.AirDeceleration;
+        //     _rb.velocity = new Vector2(Mathf.MoveTowards(_rb.velocity.x, 0, deceleration * Time.fixedDeltaTime), _rb.velocity.y);
+        // }
+        // else
+        // {
+        //     _spriteRenderer.flipX = _frameInput.MoveHorizontal < 0;
+        //     animController.PlayRunAnimation();
+        //     _rb.velocity = new Vector2(Mathf.MoveTowards(_rb.velocity.x, _frameInput.MoveHorizontal * _stats.MaxSpeed, _stats.Acceleration * Time.fixedDeltaTime), _rb.velocity.y);
+        // }
+
+        float acceleration = _grounded ? _stats.GroundAcceleration : _stats.InAirAcceleration;
+        float deceleration = _grounded ? _stats.GroundDeceleration : _stats.InAirDeceleration;
+
+        float targetSpeed = _frameInput.MoveHorizontal * _stats.TargetSpeed;
+        float speedDifference = targetSpeed - _rb.velocity.x;
+        float accelerationRate = Mathf.Abs(targetSpeed) < 0.01f ? deceleration : acceleration;
+        float movementX = Mathf.Pow(Mathf.Abs(speedDifference) * accelerationRate, _stats.VelocityPower) * Mathf.Sign(speedDifference);
+
+        if (_frameInput.MoveHorizontal == 0)
         {
             animController.PlayIdleAnimation();
-            var deceleration = _grounded ? _stats.GroundDeceleration : _stats.AirDeceleration;
-            _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
         }
         else
         {
-            _spriteRenderer.flipX = _frameVelocity.x < 0;
+            _spriteRenderer.flipX = _frameInput.MoveHorizontal < 0;
             animController.PlayRunAnimation();
-            _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * _stats.MaxSpeed, _stats.Acceleration * Time.fixedDeltaTime);
+        }
+        
+        _rb.AddForce(movementX * Vector2.right);
+
+    }
+
+    private void ApplyFriction()
+    {
+        if (_grounded && Mathf.Abs(_frameInput.MoveHorizontal) < 0.01f)
+        {
+            float amount = Mathf.Min(Mathf.Abs(_rb.velocity.x), Mathf.Abs(_stats.FrictionAmount));
+            amount *= Mathf.Sign(_rb.velocity.x);
+            _rb.AddForce(Vector2.right * -amount, ForceMode2D.Impulse);
+        }
+    }
+
+    private void ApplyAirResistance()
+    {
+        if (!_grounded)
+        {
+            _rb.velocity = new Vector2(_rb.velocity.x * _stats.AirResistance, _rb.velocity.y);
         }
     }
 
     #endregion
 
-    #region Gravity
-
-    private void HandleGravity()
+    #region Horizontal
+    private void HandleGravityScale()
     {
-        if (_grounded && _frameVelocity.y <= 0f)
+        if (_grounded)
         {
-            _frameVelocity.y = _stats.GroundingForce;
+            _rb.gravityScale = _stats.GroundingGravityScaleModifier;
         }
-        else
+        else if (!_grounded && _rb.velocity.y < 0f)
         {
-            var inAirGravity = _stats.FallAcceleration;
-            if (_endedJumpEarly && _frameVelocity.y > 0) inAirGravity *= _stats.JumpEndEarlyGravityModifier;
-            _frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, -_stats.MaxFallSpeed, inAirGravity * Time.fixedDeltaTime);
+            _rb.gravityScale = _stats.FallingGravityScaleModifier;
+        }
+        else if (!_grounded && _rb.velocity.y > 0f)
+        {
+            _rb.gravityScale = _stats.InAirGravityScaleModifier;
+        }
+
+        if (_endedJumpEarly)
+        {
+            // If the jump was ended early, apply a stronger gravity scale
+            _rb.gravityScale = _stats.JumpEndEarlyGravityScaleModifier;
         }
     }
-
     #endregion
-
-    private void ApplyMovement() => _rb.velocity = _frameVelocity;
-#if UNITY_EDITOR
-    private void OnValidate()
-    {
-        if (_stats == null) Debug.LogWarning("Please assign a ScriptableStats asset to the Player Controller's Stats slot", this);
-    }
-#endif
 }
 
 public struct FrameInput
 {
     public bool JumpDown;
     public bool JumpHeld;
-    public Vector2 Move;
+    public float MoveHorizontal;
 }
 
 public interface IPlayerController
@@ -225,5 +247,4 @@ public interface IPlayerController
     public event Action<bool, float> GroundedChanged;
 
     public event Action Jumped;
-    public Vector2 FrameInput { get; }
 }

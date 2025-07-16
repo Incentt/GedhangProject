@@ -8,7 +8,6 @@ public enum PlayerType
     Player2 = 2,
 }
 
-
 [CreateAssetMenu]
 public class PlayerStats : ScriptableObject
 {
@@ -31,22 +30,33 @@ public class PlayerStats : ScriptableObject
 
     [Header("MOVEMENT")]
     [Tooltip("The top horizontal movement speed")]
-    public float MaxSpeed = 14;
+    public float TargetSpeed = 25;
 
-    [Tooltip("The player's capacity to gain horizontal speed")]
-    public float Acceleration = 120;
+    [Tooltip("The player's capacity to gain horizontal speed at ground")]
+    public float GroundAcceleration = 60;
 
-    [Tooltip("The pace at which the player comes to a stop")]
-    public float GroundDeceleration = 60;
+    [Tooltip("The player's capacity to lose horizontal speed at ground")]
+    public float GroundDeceleration = 120;
 
-    [Tooltip("Deceleration in air only after stopping input mid-air")]
-    public float AirDeceleration = 30;
+    [Tooltip("The player's capacity to gain horizontal speed at air")]
+    public float InAirAcceleration = 60;
 
-    [Tooltip("A constant downward force applied while grounded. Helps on slopes"), Range(0f, -10f)]
-    public float GroundingForce = -1.5f;
+    [Tooltip("The player's capacity to lose horizontal speed at air")]
+    public float InAirDeceleration = 120;
+
+    [Tooltip("The power applied to the accel or deccel of the player horizontal velocity")]
+    public float FrictionAmount = 0.8f;
+    [Tooltip("The power applied to the accel or deccel of the player horizontal velocity")]
+    public float AirResistance = 0.95f;
+
+    [Tooltip("The power applied to the accel or deccel of the player horizontal velocity")]
+    public float VelocityPower = 0.9f;
+
+    [Tooltip("Gravity scale multiplier when grounded. Helps on slopes")]
+    public float GroundingGravityScaleModifier = 5f;
 
     [Tooltip("The detection distance for grounding and roof detection"), Range(0f, 0.5f)]
-    public float GrounderDistance = 0.05f;
+    public float GrounderDistance = 0.2f;
 
     [Header("JUMP")]
     [Tooltip("The immediate velocity applied when jumping")]
@@ -56,10 +66,16 @@ public class PlayerStats : ScriptableObject
     public float MaxFallSpeed = 40;
 
     [Tooltip("The player's capacity to gain fall speed. a.k.a. In Air Gravity")]
-    public float FallAcceleration = 110;
+    public float FallAcceleration = 20;
+
+    [Tooltip("The gravity multiplier added when in air")]
+    public float InAirGravityScaleModifier = 4f;
+
+    [Tooltip("The gravity multiplier added when falling")]
+    public float FallingGravityScaleModifier = 4f;
 
     [Tooltip("The gravity multiplier added when jump is released early")]
-    public float JumpEndEarlyGravityModifier = 3;
+    public float JumpEndEarlyGravityScaleModifier = 8f;
 
     [Tooltip("The time before coyote jump becomes unusable. Coyote jump allows jump to execute even after leaving a ledge")]
     public float CoyoteTime = .15f;
