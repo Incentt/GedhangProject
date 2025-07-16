@@ -4,27 +4,18 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
+[RequireComponent(typeof(LineRenderer))]
 public class RopeManager : MonoBehaviour
 {
     private LineRenderer _lineRenderer;
 
-    public GameObject player1;
-    public GameObject player2;
+    private GameObject player1;
+    private GameObject player2;
 
     public GameObject ropeSegmentPrefab;
 
     public int ropeSegmentCountHalved = 10;
     public float distancePerSegment = 0.1f;
-    private float DistancePerSegment
-    {
-        get { return distancePerSegment; }
-        set
-        {
-            distancePerSegment = value;
-            UpdateRopeDistancePerSegments();
-        }
-    }
-
     public float ropeLengthDefault = 4f;
     private float _ropeLength;
     private float RopeLength
@@ -34,7 +25,7 @@ public class RopeManager : MonoBehaviour
         {
             _ropeLength = value;
             int segmentCount = GetTotalRopeSegmentCount();
-            DistancePerSegment = _ropeLength / segmentCount;
+            distancePerSegment = _ropeLength / segmentCount;
             UpdateSpringDistance(_ropeLength);
             print("Rope Length Updated: " + _ropeLength); // debug
         }
@@ -43,10 +34,15 @@ public class RopeManager : MonoBehaviour
 
     private List<GameObject> _ropeSegments = new List<GameObject>();
 
+    public void InitializeRope()
+    {
+        InitializePlayer();
+        CreateRope();
+    }
+
     private void Awake()
     {
         _lineRenderer = GetComponent<LineRenderer>();
-        CreateRope();
     }
 
     private void Start()
@@ -57,7 +53,32 @@ public class RopeManager : MonoBehaviour
 
     private void Update()
     {
-        DrawRope();
+        UpdateRope();
+    }
+    private void InitializePlayer()
+    {
+        if (player1 == null || player2 == null)
+        {
+            player1 = GameManager.Instance.currentPlayer1;
+            player2 = GameManager.Instance.currentPlayer2;
+        }
+
+        if (player1.GetComponent<DistanceJoint2D>() == null)
+        {
+            DistanceJoint2D distanceJoint2D = player1.AddComponent<DistanceJoint2D>();
+            distanceJoint2D.enableCollision = true;
+        }
+        if (player2.GetComponent<DistanceJoint2D>() == null)
+        {
+            DistanceJoint2D distanceJoint2D = player2.AddComponent<DistanceJoint2D>();
+            distanceJoint2D.enableCollision = true;
+        }
+
+        if (player1.GetComponent<SpringJoint2D>() == null)
+        {
+            SpringJoint2D springJoint2D = player1.AddComponent<SpringJoint2D>();
+            springJoint2D.enableCollision = true;
+        }
     }
 
     private void CreateRope()
@@ -73,7 +94,7 @@ public class RopeManager : MonoBehaviour
         GameObject ropeSegmentMid = new GameObject("RopeSegmentMid", typeof(Rigidbody2D));
         ropeSegmentMid.tag = "RopeSegment";
         ropeSegmentMid.transform.position = midPoint;
-
+        ropeSegmentMid.transform.parent = transform; // Set parent to RopeManager
         _ropeSegments.Add(ropeSegmentMid);
 
         foreach (GameObject objTarget in new GameObject[] { player1, player2 })
@@ -85,6 +106,7 @@ public class RopeManager : MonoBehaviour
                 GameObject ropeSegment = Instantiate(ropeSegmentPrefab, position, Quaternion.identity);
                 ropeSegment.name = "RopeSegment_" + objTarget.name + "_" + i;
                 _ropeSegments.Add(ropeSegment);
+                ropeSegment.transform.parent = transform; // Set parent to RopeManager
 
 
                 ropeSegment.GetComponent<DistanceJoint2D>().connectedBody = _ropeSegments[_ropeSegments.Count - 2].GetComponent<Rigidbody2D>();
@@ -98,45 +120,34 @@ public class RopeManager : MonoBehaviour
                 _ropeSegments.Reverse();
             }
         }
+        StartCoroutine(EnablePlayer2JointDelayed(player2.GetComponent<DistanceJoint2D>()));
     }
 
-    private void DrawRope()
+    private void UpdateRope()
     {
-        if (_lineRenderer == null)
+        if (_lineRenderer == null || player1 == null || player2 == null || _ropeSegments.Count == 0)
         {
-            Debug.LogError("LineRenderer component is not assigned.");
             return;
         }
 
-        _lineRenderer.positionCount = _ropeSegments.Count() + 2;
+        int totalPoints = GetTotalRopeSegmentCount();
+        _lineRenderer.positionCount = totalPoints;
 
-        _lineRenderer.SetPosition(0, player1.transform.position);
-        int counter = 1;
-        foreach (GameObject ropeSegment in _ropeSegments)
+        // Use Vector3.Lerp for smoothing
+        Vector3 prevPos = _lineRenderer.GetPosition(0);
+        Vector3 targetPos = player1.transform.position;
+        _lineRenderer.SetPosition(0, Vector3.Lerp(prevPos, targetPos, 0.5f));
+
+        for (int i = 0; i < _ropeSegments.Count; i++)
         {
-            Vector3 position = ropeSegment.transform.position;
-            _lineRenderer.SetPosition(counter, position);
-            counter++;
-        }
-        _lineRenderer.SetPosition(counter, player2.transform.position);
-
-
-    }
-
-    private void UpdateRopeDistancePerSegments()
-    {
-        foreach (GameObject ropeSegment in _ropeSegments)
-        {
-            if (ropeSegment.GetComponent<DistanceJoint2D>() != null)
-            {
-                ropeSegment.GetComponent<DistanceJoint2D>().distance = distancePerSegment;
-            }
+            prevPos = _lineRenderer.GetPosition(i + 1);
+            targetPos = _ropeSegments[i].transform.position;
+            _lineRenderer.SetPosition(i + 1, Vector3.Lerp(prevPos, targetPos, 0.5f));
         }
 
-        foreach (GameObject objTarget in new GameObject[] { player1, player2 })
-        {
-            objTarget.GetComponent<DistanceJoint2D>().distance = distancePerSegment;
-        }
+        prevPos = _lineRenderer.GetPosition(totalPoints - 1);
+        targetPos = player2.transform.position;
+        _lineRenderer.SetPosition(totalPoints - 1, Vector3.Lerp(prevPos, targetPos, 0.5f));
     }
 
     private int GetTotalRopeSegmentCount()
@@ -154,5 +165,30 @@ public class RopeManager : MonoBehaviour
         }
 
         player1.GetComponent<SpringJoint2D>().distance = distance;
+    }
+    private IEnumerator EnablePlayer2JointDelayed(DistanceJoint2D joint)
+    {
+        yield return new WaitForFixedUpdate();
+        joint.enabled = false;
+        yield return new WaitForFixedUpdate();
+        joint.enabled = true;
+
+        // Also reset the connected body
+        Rigidbody2D connectedRb = joint.connectedBody;
+        joint.connectedBody = null;
+        yield return new WaitForFixedUpdate();
+        joint.connectedBody = connectedRb;
+    }
+    public void DestroyRope()
+    {
+        foreach (GameObject segment in _ropeSegments)
+        {
+            if (segment != null)
+            {
+                Destroy(segment);
+            }
+        }
+        _ropeSegments.Clear();
+        _lineRenderer.positionCount = 0;
     }
 }
