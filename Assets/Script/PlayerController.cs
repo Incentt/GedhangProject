@@ -11,7 +11,6 @@ public class PlayerController : MonoBehaviour, IPlayerController
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
     private FrameInput _frameInput;
-    private bool _cachedQueryStartInColliders;
 
     #region Interface
 
@@ -185,19 +184,19 @@ public class PlayerController : MonoBehaviour, IPlayerController
             _spriteRenderer.flipX = _frameInput.MoveHorizontal < 0;
             animController.PlayRunAnimation();
         }
-        
+
         _rb.AddForce(movementX * Vector2.right);
 
     }
 
     private void ApplyFriction()
     {
-        if (_grounded && Mathf.Abs(_frameInput.MoveHorizontal) < 0.01f)
-        {
-            float amount = Mathf.Min(Mathf.Abs(_rb.velocity.x), Mathf.Abs(_stats.FrictionAmount));
-            amount *= Mathf.Sign(_rb.velocity.x);
-            _rb.AddForce(Vector2.right * -amount, ForceMode2D.Impulse);
-        }
+        // if (_grounded && Mathf.Abs(_frameInput.MoveHorizontal) < 0.01f)
+        // {
+        //     float amount = Mathf.Min(Mathf.Abs(_rb.velocity.x), Mathf.Abs(_stats.FrictionAmount));
+        //     amount *= Mathf.Sign(_rb.velocity.x);
+        //     _rb.AddForce(Vector2.right * -amount, ForceMode2D.Impulse);
+        // }
     }
 
     private void ApplyAirResistance()

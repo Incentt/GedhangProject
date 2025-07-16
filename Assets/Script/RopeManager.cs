@@ -66,19 +66,19 @@ public class RopeManager : MonoBehaviour
         if (player1.GetComponent<DistanceJoint2D>() == null)
         {
             DistanceJoint2D distanceJoint2D = player1.AddComponent<DistanceJoint2D>();
-            distanceJoint2D.enableCollision = true;
+            // distanceJoint2D.enableCollision = true;
         }
         if (player2.GetComponent<DistanceJoint2D>() == null)
         {
             DistanceJoint2D distanceJoint2D = player2.AddComponent<DistanceJoint2D>();
-            distanceJoint2D.enableCollision = true;
+            // distanceJoint2D.enableCollision = true;
         }
 
-        if (player1.GetComponent<SpringJoint2D>() == null)
-        {
-            SpringJoint2D springJoint2D = player1.AddComponent<SpringJoint2D>();
-            springJoint2D.enableCollision = true;
-        }
+        // if (player1.GetComponent<SpringJoint2D>() == null)
+        // {
+        //     SpringJoint2D springJoint2D = player1.AddComponent<SpringJoint2D>();
+        //     springJoint2D.enableCollision = true;
+        // }
     }
 
     private void CreateRope()
@@ -121,6 +121,8 @@ public class RopeManager : MonoBehaviour
             }
         }
         StartCoroutine(EnablePlayer2JointDelayed(player2.GetComponent<DistanceJoint2D>()));
+        StartCoroutine(EnablePlayer2JointDelayed(player1.GetComponent<DistanceJoint2D>()));
+
     }
 
     private void UpdateRope()

@@ -492,7 +492,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 2082855495}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: e60dda3d5a95a43ebb0a6e472cb5c4ac, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -539,6 +539,10 @@ PrefabInstance:
     - target: {fileID: 2183723390459768974, guid: 2e480154dc5984910a483508368cae52, type: 3}
       propertyPath: m_Name
       value: RopeManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 2183723390459768974, guid: 2e480154dc5984910a483508368cae52, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6934037605209380858, guid: 2e480154dc5984910a483508368cae52, type: 3}
       propertyPath: m_LocalPosition.x
