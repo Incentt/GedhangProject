@@ -121,6 +121,11 @@ public class GameManager : MonoBehaviour
             Debug.LogWarning("Players not found! Spawning new players instead.");
             SpawnPlayersAtSpawnPoint(spawnPoint, xOffset);
         }
+        if (ropeManager != null)
+        {
+            ropeManager.DestroyRope();
+            ropeManager.InitializeRope();
+        }
     }
 
     public void RespawnPlayersAtSpawnPoint(Transform spawnPoint, float xOffset)
@@ -131,6 +136,7 @@ public class GameManager : MonoBehaviour
         // Reinitialize rope if it exists
         if (ropeManager != null)
         {
+            ropeManager.DestroyRope();
             ropeManager.InitializeRope();
         }
     }

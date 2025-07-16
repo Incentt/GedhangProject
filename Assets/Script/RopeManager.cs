@@ -16,16 +16,6 @@ public class RopeManager : MonoBehaviour
 
     public int ropeSegmentCountHalved = 10;
     public float distancePerSegment = 0.1f;
-    private float DistancePerSegment
-    {
-        get { return distancePerSegment; }
-        set
-        {
-            distancePerSegment = value;
-            UpdateRopeDistancePerSegments();
-        }
-    }
-
     public float ropeLengthDefault = 4f;
     private float _ropeLength;
     private float RopeLength
@@ -35,7 +25,7 @@ public class RopeManager : MonoBehaviour
         {
             _ropeLength = value;
             int segmentCount = GetTotalRopeSegmentCount();
-            DistancePerSegment = _ropeLength / segmentCount;
+            distancePerSegment = _ropeLength / segmentCount;
             UpdateSpringDistance(_ropeLength);
             print("Rope Length Updated: " + _ropeLength); // debug
         }
@@ -135,41 +125,29 @@ public class RopeManager : MonoBehaviour
 
     private void UpdateRope()
     {
-        if (_lineRenderer == null)
+        if (_lineRenderer == null || player1 == null || player2 == null || _ropeSegments.Count == 0)
         {
-            Debug.LogError("LineRenderer component is not assigned.");
             return;
         }
 
-        _lineRenderer.positionCount = _ropeSegments.Count() + 2;
+        int totalPoints = GetTotalRopeSegmentCount();
+        _lineRenderer.positionCount = totalPoints;
 
-        _lineRenderer.SetPosition(0, player1.transform.position);
-        int counter = 1;
-        foreach (GameObject ropeSegment in _ropeSegments)
+        // Use Vector3.Lerp for smoothing
+        Vector3 prevPos = _lineRenderer.GetPosition(0);
+        Vector3 targetPos = player1.transform.position;
+        _lineRenderer.SetPosition(0, Vector3.Lerp(prevPos, targetPos, 0.5f));
+
+        for (int i = 0; i < _ropeSegments.Count; i++)
         {
-            Vector3 position = ropeSegment.transform.position;
-            _lineRenderer.SetPosition(counter, position);
-            counter++;
+            prevPos = _lineRenderer.GetPosition(i + 1);
+            targetPos = _ropeSegments[i].transform.position;
+            _lineRenderer.SetPosition(i + 1, Vector3.Lerp(prevPos, targetPos, 0.5f));
         }
-        _lineRenderer.SetPosition(counter, player2.transform.position);
 
-
-    }
-
-    private void UpdateRopeDistancePerSegments()
-    {
-        // foreach (GameObject ropeSegment in _ropeSegments)
-        // {
-        //     if (ropeSegment.GetComponent<DistanceJoint2D>() != null)
-        //     {
-        //         ropeSegment.GetComponent<DistanceJoint2D>().distance = distancePerSegment;
-        //     }
-        // }
-
-        // foreach (GameObject objTarget in new GameObject[] { player1, player2 })
-        // {
-        //     objTarget.GetComponent<DistanceJoint2D>().distance = distancePerSegment;
-        // }
+        prevPos = _lineRenderer.GetPosition(totalPoints - 1);
+        targetPos = player2.transform.position;
+        _lineRenderer.SetPosition(totalPoints - 1, Vector3.Lerp(prevPos, targetPos, 0.5f));
     }
 
     private int GetTotalRopeSegmentCount()
@@ -200,5 +178,17 @@ public class RopeManager : MonoBehaviour
         joint.connectedBody = null;
         yield return new WaitForFixedUpdate();
         joint.connectedBody = connectedRb;
+    }
+    public void DestroyRope()
+    {
+        foreach (GameObject segment in _ropeSegments)
+        {
+            if (segment != null)
+            {
+                Destroy(segment);
+            }
+        }
+        _ropeSegments.Clear();
+        _lineRenderer.positionCount = 0;
     }
 }

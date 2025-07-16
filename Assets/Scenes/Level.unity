@@ -540,10 +540,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: RopeManager
       objectReference: {fileID: 0}
-    - target: {fileID: 5923109143323869738, guid: 2e480154dc5984910a483508368cae52, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: c97cb360cffde4d2b8d961c6d33390c9, type: 2}
     - target: {fileID: 6934037605209380858, guid: 2e480154dc5984910a483508368cae52, type: 3}
       propertyPath: m_LocalPosition.x
       value: -5.11
