@@ -13,8 +13,6 @@ public class PlayerController : MonoBehaviour, IPlayerController
     private FrameInput _frameInput;
 
     #region Interface
-
-    public float FrameInput => _frameInput.MoveHorizontal;
     public event Action<bool, float> GroundedChanged;
     public event Action Jumped;
     private SpriteRenderer _spriteRenderer;

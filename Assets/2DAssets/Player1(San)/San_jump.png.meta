@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6cf912dd8d85e4a52a60fbf2146986c5
+guid: b50cbbda53a194046bf52d3af611f8e8
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,12 +123,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: San_idle_0
+      name: San_jump_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 770.75
+        width: 780
         height: 980
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -137,19 +137,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 52b4306f641d34dee8df2dc4c789668e
-      internalID: 315858829
+      spriteID: 4dee37a4f3fd342568f5d9704b0c4e54
+      internalID: -1585854639
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: San_idle_1
+      name: San_jump_1
       rect:
         serializedVersion: 2
-        x: 770
+        x: 780
         y: 0
-        width: 770.75
+        width: 780
         height: 980
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -158,50 +158,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e637381cfc75a4c5896e5b93dc6946dd
-      internalID: 731004852
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: San_idle_2
-      rect:
-        serializedVersion: 2
-        x: 1540
-        y: 0
-        width: 770.75
-        height: 980
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ededf3a3e1c97482ea5a2cb7127f4d87
-      internalID: -444018177
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: San_idle_3
-      rect:
-        serializedVersion: 2
-        x: 2310
-        y: 0
-        width: 770.75
-        height: 980
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3bf2741acd9f04c23a26a37525219f2d
-      internalID: 1836050094
+      spriteID: 8194aa4df93814971a46f474bfcb5570
+      internalID: 1464938089
       vertices: []
       indices: 
       edges: []
@@ -217,10 +175,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      San_idle_0: 315858829
-      San_idle_1: 731004852
-      San_idle_2: -444018177
-      San_idle_3: 1836050094
+      San_jump_0: -1585854639
+      San_jump_1: 1464938089
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

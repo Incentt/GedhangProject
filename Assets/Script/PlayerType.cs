@@ -45,8 +45,6 @@ public class PlayerStats : ScriptableObject
     public float InAirDeceleration = 120;
 
     [Tooltip("The power applied to the accel or deccel of the player horizontal velocity")]
-    public float FrictionAmount = 0.8f;
-    [Tooltip("The power applied to the accel or deccel of the player horizontal velocity")]
     public float AirResistance = 0.95f;
 
     [Tooltip("The power applied to the accel or deccel of the player horizontal velocity")]
@@ -64,9 +62,6 @@ public class PlayerStats : ScriptableObject
 
     [Tooltip("The maximum vertical movement speed")]
     public float MaxFallSpeed = 40;
-
-    [Tooltip("The player's capacity to gain fall speed. a.k.a. In Air Gravity")]
-    public float FallAcceleration = 20;
 
     [Tooltip("The gravity multiplier added when in air")]
     public float InAirGravityScaleModifier = 4f;
