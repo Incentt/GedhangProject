@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 8889125866517402135}
   - component: {fileID: 5756578679531021244}
   - component: {fileID: 8804273472350029333}
-  - component: {fileID: 879912824523289871}
   - component: {fileID: 2105750430457826872}
   - component: {fileID: 7039175294281707613}
   m_Layer: 7
@@ -166,26 +165,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!232 &879912824523289871
-DistanceJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3752952667199719155}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_EnableCollision: 1
-  m_ConnectedRigidBody: {fileID: 0}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_BreakAction: 3
-  m_AutoConfigureConnectedAnchor: 0
-  m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: 0}
-  m_AutoConfigureDistance: 1
-  m_Distance: 0.005
-  m_MaxDistanceOnly: 0
 --- !u!114 &2105750430457826872
 MonoBehaviour:
   m_ObjectHideFlags: 0

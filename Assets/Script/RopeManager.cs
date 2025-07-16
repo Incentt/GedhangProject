@@ -4,12 +4,13 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
+[RequireComponent(typeof(LineRenderer))]
 public class RopeManager : MonoBehaviour
 {
     private LineRenderer _lineRenderer;
 
-    public GameObject player1;
-    public GameObject player2;
+    private GameObject player1;
+    private GameObject player2;
 
     public GameObject ropeSegmentPrefab;
 
@@ -43,10 +44,15 @@ public class RopeManager : MonoBehaviour
 
     private List<GameObject> _ropeSegments = new List<GameObject>();
 
+    public void InitializeRope()
+    {
+        InitializePlayer();
+        CreateRope();
+    }
+
     private void Awake()
     {
         _lineRenderer = GetComponent<LineRenderer>();
-        CreateRope();
     }
 
     private void Start()
@@ -58,6 +64,31 @@ public class RopeManager : MonoBehaviour
     private void Update()
     {
         DrawRope();
+    }
+    private void InitializePlayer()
+    {
+        if (player1 == null || player2 == null)
+        {
+            player1 = GameManager.Instance.currentPlayer1;
+            player2 = GameManager.Instance.currentPlayer2;
+        }
+
+        if (player1.GetComponent<DistanceJoint2D>() == null)
+        {
+            DistanceJoint2D distanceJoint2D = player1.AddComponent<DistanceJoint2D>();
+            distanceJoint2D.enableCollision = true;
+        }
+        if (player2.GetComponent<DistanceJoint2D>() == null)
+        {
+            DistanceJoint2D distanceJoint2D = player2.AddComponent<DistanceJoint2D>();
+            distanceJoint2D.enableCollision = true;
+        }
+
+        if (player1.GetComponent<SpringJoint2D>() == null)
+        {
+            SpringJoint2D springJoint2D = player1.AddComponent<SpringJoint2D>();
+            springJoint2D.enableCollision = true;
+        }
     }
 
     private void CreateRope()
@@ -73,7 +104,7 @@ public class RopeManager : MonoBehaviour
         GameObject ropeSegmentMid = new GameObject("RopeSegmentMid", typeof(Rigidbody2D));
         ropeSegmentMid.tag = "RopeSegment";
         ropeSegmentMid.transform.position = midPoint;
-
+        ropeSegmentMid.transform.parent = transform; // Set parent to RopeManager
         _ropeSegments.Add(ropeSegmentMid);
 
         foreach (GameObject objTarget in new GameObject[] { player1, player2 })
@@ -85,6 +116,7 @@ public class RopeManager : MonoBehaviour
                 GameObject ropeSegment = Instantiate(ropeSegmentPrefab, position, Quaternion.identity);
                 ropeSegment.name = "RopeSegment_" + objTarget.name + "_" + i;
                 _ropeSegments.Add(ropeSegment);
+                ropeSegment.transform.parent = transform; // Set parent to RopeManager
 
 
                 ropeSegment.GetComponent<DistanceJoint2D>().connectedBody = _ropeSegments[_ropeSegments.Count - 2].GetComponent<Rigidbody2D>();

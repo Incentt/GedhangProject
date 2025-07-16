@@ -45,7 +45,8 @@ public class CameraController : MonoBehaviour
     {
         if (player1 == null || player2 == null)
         {
-            Debug.LogWarning("CameraController: Player references are missing!");
+            FindPlayers();
+            Debug.LogWarning("CameraController: Player references are missing!, Finding Players again.");
             return;
         }
 
@@ -61,17 +62,16 @@ public class CameraController : MonoBehaviour
 
     void FindPlayers()
     {
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-
-        if (players.Length >= 2)
+        GameManager gameManager = GameManager.Instance;
+        if (gameManager != null)
         {
-            player1 = players[0].transform;
-            player2 = players[1].transform;
-            Debug.Log("CameraController: Auto-found players with 'Player' tag");
+            player1 = gameManager.currentPlayer1?.transform;
+            player2 = gameManager.currentPlayer2?.transform;
         }
-        else
+
+        if (player1 == null || player2 == null)
         {
-            Debug.LogWarning("CameraController: Could not find 2 players with 'Player' tag. Please assign manually.");
+            Debug.LogError("CameraController: Players not found! Please assign them in the inspector.");
         }
     }
 
