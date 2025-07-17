@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
     public event Action<bool, float> GroundedChanged;
     public event Action Jumped;
     private SpriteRenderer _spriteRenderer;
+    private PlayerController otherPlayer;
 
 
     #endregion
@@ -30,6 +31,14 @@ public class PlayerController : MonoBehaviour, IPlayerController
         _col = GetComponent<CapsuleCollider2D>();
         animController = GetComponent<PlayerAnimatorController>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        if (PlayerType == PlayerType.Player1)
+        {
+            otherPlayer = GameManager.Instance.currentPlayer2.GetComponent<PlayerController>();
+        }
+        else if (PlayerType == PlayerType.Player2)
+        {
+            otherPlayer = GameManager.Instance.currentPlayer1.GetComponent<PlayerController>();
+        }
     }
     private void Update()
     {
