@@ -31,6 +31,9 @@ public class PlayerController : MonoBehaviour, IPlayerController
         _col = GetComponent<CapsuleCollider2D>();
         animController = GetComponent<PlayerAnimatorController>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+    void Start()
+    {
         if (GameManager.Instance != null)
         {
             if (PlayerType == PlayerType.Player1)
