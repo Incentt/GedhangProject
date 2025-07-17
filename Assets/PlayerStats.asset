@@ -17,7 +17,7 @@ MonoBehaviour:
     m_Bits: 128
   JumpableLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 192
   AnchorableLayers:
     serializedVersion: 2
     m_Bits: 64
@@ -32,8 +32,7 @@ MonoBehaviour:
   AirResistance: 0.9
   VelocityPower: 0.9
   GroundingGravityScaleModifier: 3
-  GroundAndCeilingCheckDistance: 0.2
-  GroundAndCeilingCheckOffset: 0.1
+  GroundAndCeilingCheckDistance: 0.5
   AlignRotationToGroundNormalLerpAmount: 15
   JumpPower: 300
   MaxFallSpeed: 40
