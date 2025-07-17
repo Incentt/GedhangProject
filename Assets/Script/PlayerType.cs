@@ -8,7 +8,7 @@ public enum PlayerType
     Player2 = 2,
 }
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "PlayerMovementStats", menuName = "ScriptableObjects/PlayerMovementStats", order = 1)]
 public class PlayerStats : ScriptableObject
 {
     [Header("LAYERS")]
