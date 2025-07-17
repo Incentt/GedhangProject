@@ -35,7 +35,7 @@ public class PlayerAnimatorController : MonoBehaviour
     {
         if (anim != null && anim.runtimeAnimatorController != null)
         {
-            anim.SetTrigger("land");
+            anim.Play("Land");
         }
     }
 }
