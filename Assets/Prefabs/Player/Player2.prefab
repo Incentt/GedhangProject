@@ -16,6 +16,10 @@ PrefabInstance:
       propertyPath: PlayerType
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 3302337113834444635, guid: 50b2650f7dd4a4c87a03dcd5dbce0786, type: 3}
+      propertyPath: m_Active
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3684158003137244352, guid: 50b2650f7dd4a4c87a03dcd5dbce0786, type: 3}
       propertyPath: PlayerType
       value: 2

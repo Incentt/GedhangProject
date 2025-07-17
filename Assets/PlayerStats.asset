@@ -18,6 +18,9 @@ MonoBehaviour:
   JumpableLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+  AnchorableLayers:
+    serializedVersion: 2
+    m_Bits: 64
   SnapInput: 1
   VerticalDeadZoneThreshold: 0.3
   HorizontalDeadZoneThreshold: 0.1
@@ -31,7 +34,7 @@ MonoBehaviour:
   GroundingGravityScaleModifier: 3
   GroundAndCeilingCheckDistance: 0.2
   GroundAndCeilingCheckOffset: 0.1
-  StandBasedOnNormalLerpAmount: 20
+  AlignRotationToGroundNormalLerpAmount: 15
   JumpPower: 300
   MaxFallSpeed: 40
   InAirGravityScaleModifier: 4

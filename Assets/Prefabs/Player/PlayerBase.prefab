@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2105750430457826872}
   - component: {fileID: 7039175294281707613}
   - component: {fileID: 3684158003137244352}
+  - component: {fileID: 3302337113834444635}
   m_Layer: 7
   m_Name: PlayerBase
   m_TagString: Player
@@ -198,3 +199,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerType: 0
   _stats: {fileID: 11400000, guid: aa1c6b8833d784fa28f2b260a61a697e, type: 2}
+--- !u!1818360608 &3302337113834444635
+PositionConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3752952667199719155}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_TranslationAtRest: {x: 0, y: 0, z: 0}
+  m_TranslationOffset: {x: 0, y: 0, z: 0}
+  m_AffectTranslationX: 1
+  m_AffectTranslationY: 1
+  m_AffectTranslationZ: 1
+  m_Active: 1
+  m_IsLocked: 1
+  m_Sources: []

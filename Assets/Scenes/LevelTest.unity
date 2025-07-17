@@ -882,12 +882,24 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8109881202835347280, guid: 2e480154dc5984910a483508368cae52, type: 3}
+      propertyPath: springFrequency
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8109881202835347280, guid: 2e480154dc5984910a483508368cae52, type: 3}
       propertyPath: ropeLengthDefault
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8109881202835347280, guid: 2e480154dc5984910a483508368cae52, type: 3}
+      propertyPath: springDampingRatio
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8109881202835347280, guid: 2e480154dc5984910a483508368cae52, type: 3}
       propertyPath: ropeSegmentCountHalved
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8109881202835347280, guid: 2e480154dc5984910a483508368cae52, type: 3}
+      propertyPath: ropeLengthToActualRopeDistanceFactor
+      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

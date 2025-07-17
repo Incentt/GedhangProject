@@ -18,6 +18,9 @@ public class PlayerStats : ScriptableObject
     [Tooltip("Layers that the player can jump from. Only surfaces on these layers will allow jumping")]
     public LayerMask JumpableLayers;
 
+    [Tooltip("Layers that the player can anchor on. Only surfaces on these layers will allow anchoring")]
+    public LayerMask AnchorableLayers;
+
     [Header("INPUT")]
     [Tooltip("Makes all Input snap to an integer. Prevents gamepads from walking slowly. Recommended value is true to ensure gamepad/keybaord parity.")]
     public bool SnapInput = true;
@@ -60,7 +63,7 @@ public class PlayerStats : ScriptableObject
     public float GroundAndCeilingCheckOffset = 0.1f;
 
     [Tooltip("Lerp amount for standing based on normal")]
-    public float StandBasedOnNormalLerpAmount = 20f;
+    public float AlignRotationToGroundNormalLerpAmount = 15f;
 
     [Header("JUMP")]
     [Tooltip("The immediate velocity applied when jumping")]
