@@ -31,13 +31,16 @@ public class PlayerController : MonoBehaviour, IPlayerController
         _col = GetComponent<CapsuleCollider2D>();
         animController = GetComponent<PlayerAnimatorController>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        if (PlayerType == PlayerType.Player1)
+        if (GameManager.Instance != null)
         {
-            otherPlayer = GameManager.Instance.currentPlayer2.GetComponent<PlayerController>();
-        }
-        else if (PlayerType == PlayerType.Player2)
-        {
-            otherPlayer = GameManager.Instance.currentPlayer1.GetComponent<PlayerController>();
+            if (PlayerType == PlayerType.Player1)
+            {
+                otherPlayer = GameManager.Instance.currentPlayer2.GetComponent<PlayerController>();
+            }
+            else if (PlayerType == PlayerType.Player2)
+            {
+                otherPlayer = GameManager.Instance.currentPlayer1.GetComponent<PlayerController>();
+            }
         }
     }
     private void Update()
@@ -98,7 +101,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
         Debug.DrawRay(centerGroundHit.point, Vector2.down * _stats.GroundAndCeilingCheckDistance, Color.green);
         Debug.DrawRay(rightGroundHit.point, Vector2.down * _stats.GroundAndCeilingCheckDistance, Color.green);
 
-        float distanceFromPivot = GetComponent<Renderer>().bounds.size.y/2 + _stats.GroundAndCeilingCheckOffset + _stats.GroundAndCeilingCheckDistance; // Using CapsuleCollider2D (your current setup)
+        float distanceFromPivot = GetComponent<Renderer>().bounds.size.y / 2 + _stats.GroundAndCeilingCheckOffset + _stats.GroundAndCeilingCheckDistance; // Using CapsuleCollider2D (your current setup)
         RaycastHit2D groundHitFromPivot = Physics2D.Raycast(transform.position, Vector2.down, distanceFromPivot, ~_stats.PlayerLayer);
         Debug.DrawRay(transform.position, Vector2.down * distanceFromPivot, Color.red);
 
@@ -143,12 +146,12 @@ public class PlayerController : MonoBehaviour, IPlayerController
 
         // Get the target rotation
         Quaternion targetRot = Quaternion.identity;
-        
+
         if (groundHit.collider != null)
         {
             targetRot = Quaternion.FromToRotation(Vector3.up, groundHit.normal);
         }
-        
+
         // Apply rotation
         if (targetRot == Quaternion.identity)
         {
@@ -158,8 +161,8 @@ public class PlayerController : MonoBehaviour, IPlayerController
         {
             // Need to fix: jitter when in between 2 grounds normals
             transform.rotation = Quaternion.Lerp(
-                transform.rotation, 
-                targetRot, 
+                transform.rotation,
+                targetRot,
                 Time.deltaTime * _stats.StandBasedOnNormalLerpAmount
             );
         }
