@@ -108,13 +108,13 @@ public class PlayerController : MonoBehaviour, IPlayerController
         ApplyAirResistance();
         HandleGravityScale();
         HandleAnchoring();
-        
+
         if (PlayerType == PlayerType.Player1)
         {
-            print("Grounded: " + _grounded + ", Is Anchored: " + _isAnchored);
+            //print("Grounded: " + _grounded + ", Is Anchored: " + _isAnchored);
         }
     }
-        
+
 
     #region Collision
     private float _frameLeftGrounded = float.MinValue;
@@ -127,11 +127,11 @@ public class PlayerController : MonoBehaviour, IPlayerController
     private void CheckCollisions()
     {
         // Ground and Ceiling
-        bool ceilingIsHit = Physics2D.CapsuleCast(new Vector2(_col.bounds.center.x, _col.bounds.center.y + _stats.GroundAndCeilingCheckOffset), _col.size, _col.direction, 0, Vector2.up, _stats.GroundAndCeilingCheckDistance, ~_stats.PlayerLayer);
+        bool ceilingIsHit = Physics2D.CapsuleCast(new Vector2(_col.bounds.center.x, _col.bounds.center.y), _col.size, _col.direction, 0, Vector2.up, _stats.GroundAndCeilingCheckDistance, ~_stats.PlayerLayer);
 
-        RaycastHit2D leftGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.min.x, _col.bounds.min.y - _stats.GroundAndCeilingCheckOffset), Vector2.down, _stats.GroundAndCeilingCheckDistance);
-        RaycastHit2D centerGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.center.x, _col.bounds.min.y - _stats.GroundAndCeilingCheckOffset), Vector2.down, _stats.GroundAndCeilingCheckDistance);
-        RaycastHit2D rightGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.max.x, _col.bounds.min.y - _stats.GroundAndCeilingCheckOffset), Vector2.down, _stats.GroundAndCeilingCheckDistance);
+        RaycastHit2D leftGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.min.x, _col.bounds.min.y), Vector2.down, _stats.GroundAndCeilingCheckDistance);
+        RaycastHit2D centerGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.center.x, _col.bounds.min.y), Vector2.down, _stats.GroundAndCeilingCheckDistance);
+        RaycastHit2D rightGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.max.x, _col.bounds.min.y), Vector2.down, _stats.GroundAndCeilingCheckDistance);
 
         Debug.DrawRay(leftGroundHit.point, Vector2.down * _stats.GroundAndCeilingCheckDistance, Color.green);
         Debug.DrawRay(centerGroundHit.point, Vector2.down * _stats.GroundAndCeilingCheckDistance, Color.green);
@@ -185,13 +185,13 @@ public class PlayerController : MonoBehaviour, IPlayerController
         {
             transform.rotation = Quaternion.identity; // Reset rotation when not grounded or anchored
         }
-        
+
     }
 
     private void AlignRotationToGroundNormal()
     {
 
-        float distanceFromAnchor = GetComponent<Renderer>().bounds.size.y / 2 + _stats.GroundAndCeilingCheckOffset + _stats.GroundAndCeilingCheckDistance; // Using CapsuleCollider2D (your current setup)
+        float distanceFromAnchor = GetComponent<Renderer>().bounds.size.y / 2 + _stats.GroundAndCeilingCheckDistance; // Using CapsuleCollider2D (your current setup)
         RaycastHit2D groundHitFromAnchor = Physics2D.Raycast(transform.position, Vector2.down, distanceFromAnchor, ~_stats.PlayerLayer);
         Debug.DrawRay(transform.position, Vector2.down * distanceFromAnchor, Color.red);
 
@@ -353,10 +353,10 @@ public class PlayerController : MonoBehaviour, IPlayerController
     {
         if (_frameInput.AnchorHeld && _grounded && !_isAnchored && _onAnchorableSurface)
         {
-            print("Attempting to anchor...");
+            //print("Attempting to anchor...");
             // Find the ground object to attach to
             GameObject groundObject = _groundHit.collider?.gameObject;
-            
+
             if (groundObject != null)
             {
                 StartAnchoring(groundObject);
@@ -418,7 +418,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
     #endregion
 
     #region Swinging
-    
+
     #endregion
 }
 

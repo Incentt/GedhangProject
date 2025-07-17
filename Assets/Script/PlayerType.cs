@@ -59,9 +59,6 @@ public class PlayerStats : ScriptableObject
     [Tooltip("The detection distance for grounding and roof"), Range(0f, 0.5f)]
     public float GroundAndCeilingCheckDistance = 0.2f;
 
-    [Tooltip("The offset detection distance for grounding and roof"), Range(0f, 0.5f)]
-    public float GroundAndCeilingCheckOffset = 0.1f;
-
     [Tooltip("Lerp amount for standing based on normal")]
     public float AlignRotationToGroundNormalLerpAmount = 15f;
 
