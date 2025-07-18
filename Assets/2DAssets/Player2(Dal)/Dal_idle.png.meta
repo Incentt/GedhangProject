@@ -128,17 +128,17 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 773.75
-        height: 980
+        width: 702
+        height: 802
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3b9e56632235649178daa1d3b20ec194
-      internalID: 405144469
+      spriteID: a236b6a1f8d3643d3b6b2903822c3a4d
+      internalID: -1124724582
       vertices: []
       indices: 
       edges: []
@@ -147,19 +147,19 @@ TextureImporter:
       name: Dal_idle_1
       rect:
         serializedVersion: 2
-        x: 771
+        x: 702
         y: 0
-        width: 774
-        height: 980
+        width: 702
+        height: 802
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8ec3d267295f1438faabc63d3273ea7b
-      internalID: 1919177402
+      spriteID: a80671875da4449d680fd71a2c92294c
+      internalID: 1696984395
       vertices: []
       indices: 
       edges: []
@@ -168,19 +168,19 @@ TextureImporter:
       name: Dal_idle_2
       rect:
         serializedVersion: 2
-        x: 1546
+        x: 1404
         y: 0
-        width: 773.75
-        height: 980
+        width: 702
+        height: 802
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0bd389f3e7d7a45899eb04b2fbb4385d
-      internalID: -2138382628
+      spriteID: 78b3ea1b8b9ac4210a1a81b8a6ed140d
+      internalID: -541849455
       vertices: []
       indices: 
       edges: []
@@ -189,19 +189,19 @@ TextureImporter:
       name: Dal_idle_3
       rect:
         serializedVersion: 2
-        x: 2319
+        x: 2106
         y: 0
-        width: 773.75
-        height: 980
+        width: 702
+        height: 802
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0074ac0dc77b24596b2692f6258f7c7e
-      internalID: -390336032
+      spriteID: 1625d1245db2f45188caca480d63e4e8
+      internalID: 494457920
       vertices: []
       indices: 
       edges: []
@@ -217,10 +217,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Dal_idle_0: 405144469
-      Dal_idle_1: 1919177402
-      Dal_idle_2: -2138382628
-      Dal_idle_3: -390336032
+      Dal_idle_0: -1124724582
+      Dal_idle_1: 1696984395
+      Dal_idle_2: -541849455
+      Dal_idle_3: 494457920
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

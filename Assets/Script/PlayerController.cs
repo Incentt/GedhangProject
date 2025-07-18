@@ -126,12 +126,19 @@ public class PlayerController : MonoBehaviour, IPlayerController
 
     private void CheckCollisions()
     {
-        // Ground and Ceiling
-        bool ceilingIsHit = Physics2D.CapsuleCast(new Vector2(_col.bounds.center.x, _col.bounds.center.y), _col.size, _col.direction, 0, Vector2.up, _stats.GroundAndCeilingCheckDistance, ~_stats.PlayerLayer);
+        // Create layer mask that excludes both players
+        LayerMask playerLayersToExclude = _stats.PlayerLayer;
+        if (otherPlayer != null)
+        {
+            playerLayersToExclude |= otherPlayer._stats.PlayerLayer;
+        }
 
-        RaycastHit2D leftGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.min.x, _col.bounds.min.y), Vector2.down, _stats.GroundAndCeilingCheckDistance);
-        RaycastHit2D centerGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.center.x, _col.bounds.min.y), Vector2.down, _stats.GroundAndCeilingCheckDistance);
-        RaycastHit2D rightGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.max.x, _col.bounds.min.y), Vector2.down, _stats.GroundAndCeilingCheckDistance);
+        // Ground and Ceiling
+        bool ceilingIsHit = Physics2D.CapsuleCast(new Vector2(_col.bounds.center.x, _col.bounds.center.y), _col.size, _col.direction, 0, Vector2.up, _stats.GroundAndCeilingCheckDistance, ~playerLayersToExclude);
+
+        RaycastHit2D leftGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.min.x, _col.bounds.min.y), Vector2.down, _stats.GroundAndCeilingCheckDistance, ~playerLayersToExclude);
+        RaycastHit2D centerGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.center.x, _col.bounds.min.y), Vector2.down, _stats.GroundAndCeilingCheckDistance, ~playerLayersToExclude);
+        RaycastHit2D rightGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.max.x, _col.bounds.min.y), Vector2.down, _stats.GroundAndCeilingCheckDistance, ~playerLayersToExclude);
 
         Debug.DrawRay(leftGroundHit.point, Vector2.down * _stats.GroundAndCeilingCheckDistance, Color.green);
         Debug.DrawRay(centerGroundHit.point, Vector2.down * _stats.GroundAndCeilingCheckDistance, Color.green);
@@ -190,9 +197,15 @@ public class PlayerController : MonoBehaviour, IPlayerController
 
     private void AlignRotationToGroundNormal()
     {
+        // Create layer mask that excludes both players
+        LayerMask playerLayersToExclude = _stats.PlayerLayer;
+        if (otherPlayer != null)
+        {
+            playerLayersToExclude |= otherPlayer._stats.PlayerLayer;
+        }
 
         float distanceFromAnchor = GetComponent<Renderer>().bounds.size.y / 2 + _stats.GroundAndCeilingCheckDistance; // Using CapsuleCollider2D (your current setup)
-        RaycastHit2D groundHitFromAnchor = Physics2D.Raycast(transform.position, Vector2.down, distanceFromAnchor, ~_stats.PlayerLayer);
+        RaycastHit2D groundHitFromAnchor = Physics2D.Raycast(transform.position, Vector2.down, distanceFromAnchor, ~playerLayersToExclude);
         Debug.DrawRay(transform.position, Vector2.down * distanceFromAnchor, Color.red);
 
         // Get the target rotation

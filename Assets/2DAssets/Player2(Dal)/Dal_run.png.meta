@@ -69,7 +69,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 1024
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -123,13 +123,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: DAL RUN_0
+      name: Dal_run_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 768.2857
-        height: 980
+        width: 702
+        height: 802
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,20 +137,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a488533b8da1947a2a5600667f5f2350
-      internalID: 256075975
+      spriteID: 051d1cc2a49624147a622f1eb5813140
+      internalID: -1830038678
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: DAL RUN_1
+      name: Dal_run_1
       rect:
         serializedVersion: 2
-        x: 768
+        x: 702
         y: 0
-        width: 768.2857
-        height: 980
+        width: 702
+        height: 802
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,20 +158,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f9df0b87226ee460f80bf1d8eff5cfc9
-      internalID: 396950964
+      spriteID: d578da14c9e964463921493d355e737a
+      internalID: -1960751207
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: DAL RUN_2
+      name: Dal_run_2
       rect:
         serializedVersion: 2
-        x: 1536
+        x: 1404
         y: 0
-        width: 768.2857
-        height: 980
+        width: 702
+        height: 802
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -179,20 +179,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2c8c89ce9d4f84a379e53eba7ffab869
-      internalID: -251210873
+      spriteID: 4e1e0e923a7a74fa7a70a689100da212
+      internalID: 1586194173
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: DAL RUN_3
+      name: Dal_run_3
       rect:
         serializedVersion: 2
-        x: 2304
+        x: 2106
         y: 0
-        width: 768.2857
-        height: 980
+        width: 702
+        height: 802
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -200,20 +200,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2103eef6269d445a8b51d0ad95efd562
-      internalID: 275918665
+      spriteID: 680724226d1d14cea9b3a3dac872b7f2
+      internalID: 372874422
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: DAL RUN_4
+      name: Dal_run_4
       rect:
         serializedVersion: 2
-        x: 3072
+        x: 2808
         y: 0
-        width: 768.2857
-        height: 980
+        width: 702
+        height: 802
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -221,20 +221,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c43c9358dc1c34c59a315eecaaf250a0
-      internalID: -2072226354
+      spriteID: 71363765e0a9a4151a6dbfb8d4584893
+      internalID: -1574318835
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: DAL RUN_5
+      name: Dal_run_5
       rect:
         serializedVersion: 2
-        x: 3840
+        x: 3510
         y: 0
-        width: 768.2857
-        height: 980
+        width: 702
+        height: 802
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -242,20 +242,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f85c0b6710fdd4940b1540bf65163537
-      internalID: 1497009460
+      spriteID: 640be3de55dba46f0bb56587fe5458b0
+      internalID: -1978506740
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: DAL RUN_6
+      name: Dal_run_6
       rect:
         serializedVersion: 2
-        x: 4608
+        x: 4212
         y: 0
-        width: 768.2857
-        height: 980
+        width: 702
+        height: 802
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -263,8 +263,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aaf62e52f86734ca1bf39b25856b6af6
-      internalID: 1136232000
+      spriteID: 925f15df7cb9844b1b7cb7539c2c22d9
+      internalID: -948041834
       vertices: []
       indices: 
       edges: []
@@ -280,13 +280,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      DAL RUN_0: 256075975
-      DAL RUN_1: 396950964
-      DAL RUN_2: -251210873
-      DAL RUN_3: 275918665
-      DAL RUN_4: -2072226354
-      DAL RUN_5: 1497009460
-      DAL RUN_6: 1136232000
+      Dal_run_0: -1830038678
+      Dal_run_1: -1960751207
+      Dal_run_2: 1586194173
+      Dal_run_3: 372874422
+      Dal_run_4: -1574318835
+      Dal_run_5: -1978506740
+      Dal_run_6: -948041834
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

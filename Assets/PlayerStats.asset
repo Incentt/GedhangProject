@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 384
   JumpableLayers:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 448
   AnchorableLayers:
     serializedVersion: 2
     m_Bits: 64
