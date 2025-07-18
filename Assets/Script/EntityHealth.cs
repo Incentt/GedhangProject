@@ -14,6 +14,10 @@ public partial class EntityHealth : MonoBehaviour
     }
     private void Start()
     {
+        if (stats == null)
+        {
+            return;
+        }
         SetHealth(stats.health);
     }
     public void TakeDamage(float amount)
@@ -32,5 +36,10 @@ public partial class EntityHealth : MonoBehaviour
     public virtual void Die()
     {
         //Dont modified this here, it should be overridden in derived classes CEK PlayerHealth
+    }
+    public virtual void SetStats(EntityStatsData newStats)
+    {
+        stats = newStats;
+        SetHealth(stats.health);
     }
 }

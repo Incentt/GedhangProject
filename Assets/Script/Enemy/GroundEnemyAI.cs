@@ -1,37 +1,16 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
-public class GroundEnemyAI : MonoBehaviour
+public class GroundEnemyAI : EnemyAI
 {
     [Header("AI Configuration")]
-    [SerializeField] private EntityStatsData enemyStats;
-    [SerializeField] private GroundEnemyAISettings aiSettings;
-
-    [Header("Movement")]
-    [SerializeField] private bool facingRight = true;
-
-    [Header("Detection Points")]
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private Transform wallCheck;
-
-    [Header("Animation")]
-    [SerializeField] private Animator animator;
-    [SerializeField] private SpriteRenderer spriteRenderer;
-
-    // Components
-    private Rigidbody2D rb;
-    private EnemyHealth enemyHealth;
+    [SerializeField] private new GroundEnemyAISettings aiSettings;
 
     // State management
     private bool isPatrolling = true;
     private bool isAlive = true;
     private float pauseTimer = 0f;
     private bool isPaused = false;
-
-    // Environment detection
-    private bool isGrounded;
-    private bool isTouchingWall;
-    private bool isAtLedge;
 
     // Properties for easy access
     private float PatrolSpeed => aiSettings.patrolSpeed;
@@ -57,6 +36,7 @@ public class GroundEnemyAI : MonoBehaviour
 
     private void InitializeAI()
     {
+        base.InitializeAI();
         // Set up ground and wall check points if they don't exist
         if (groundCheck == null)
         {

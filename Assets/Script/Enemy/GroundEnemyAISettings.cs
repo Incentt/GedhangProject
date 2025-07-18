@@ -1,15 +1,8 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "GroundEnemyAISettings", menuName = "ScriptableObjects/GroundEnemyAISettings", order = 1)]
-public class GroundEnemyAISettings : ScriptableObject
+public class GroundEnemyAISettings : EnemyAISettings
 {
-    [Header("Movement Settings")]
-    [Tooltip("Speed at which the enemy patrols")]
-    public float patrolSpeed = 2f;
-
-    [Tooltip("Time to pause when PauseBeforeTurn is enabled")]
-    public float stayTime = 1f;
-
     [Header("Detection Settings")]
     [Tooltip("Distance to check for ledges ahead")]
     public float detectionDistance = 1f;

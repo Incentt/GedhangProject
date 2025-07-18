@@ -53,7 +53,7 @@ public abstract class EnemyAI : MonoBehaviour
     protected virtual void InitializeAI()
     {
         enemyHealth = GetComponent<EnemyHealth>();
-        enemyHealth.SetHealth(enemyStats.health);
+        enemyHealth.SetStats(enemyStats);
     }
 
     private void Start()

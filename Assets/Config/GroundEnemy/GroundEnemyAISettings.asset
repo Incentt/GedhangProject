@@ -14,9 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   patrolSpeed: 2
   stayTime: 1
+  idleAnimation: Idle
+  patrolAnimation: Walk
+  attackAnimation: Attack
+  dieAnimation: Die
+  maxTurnTime: 5
   detectionDistance: 1
   groundCheckRadius: 1
-  wallCheckDistance: 0.4
+  wallCheckDistance: 1
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -28,5 +33,3 @@ MonoBehaviour:
   pauseBeforeTurn: 1
   walkingAnimationParameter: isWalking
   deathAnimationParameter: die
-  deathGravityScale: 1
-  stopMovementOnDeath: 1
