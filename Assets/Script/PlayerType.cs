@@ -59,8 +59,11 @@ public class PlayerStats : ScriptableObject
     [Tooltip("The detection distance for grounding and roof"), Range(0f, 0.5f)]
     public float GroundAndCeilingCheckDistance = 0.2f;
 
+    [Tooltip("The detection padding for grounding and roof"), Range(0f, 0.5f)]
+    public float GroundAndCeilingCheckSidePadding = 0.1f;
+
     [Tooltip("Lerp amount for standing based on normal")]
-    public float AlignRotationToGroundNormalLerpAmount = 15f;
+    public float AlignRotationLerpAmount = 15f;
 
     [Header("JUMP")]
     [Tooltip("The immediate velocity applied when jumping")]
