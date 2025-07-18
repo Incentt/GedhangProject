@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7456d52bbb32945b88e632d3984d86db, type: 3}
+  m_Name: GroundEnemyAISettings
+  m_EditorClassIdentifier: 
+  patrolSpeed: 2
+  stayTime: 1
+  detectionDistance: 1
+  groundCheckRadius: 1
+  wallCheckDistance: 0.4
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  turnOnWallHit: 1
+  turnOnLedge: 1
+  pauseBeforeTurn: 1
+  walkingAnimationParameter: isWalking
+  deathAnimationParameter: die
+  deathGravityScale: 1
+  stopMovementOnDeath: 1
