@@ -103,11 +103,12 @@ public class PlayerController : MonoBehaviour, IPlayerController
         CheckCollisions();
         HandlePlayerRotation();
         HandleJump();
-        HandleDirection();
+        HandleHorizontalMovementOnGroundAndAir();
         ApplyFriction();
         ApplyAirResistance();
         HandleGravityScale();
         HandleAnchoring();
+        HandleSwinging();
 
         if (PlayerType == PlayerType.Player1)
         {
@@ -119,7 +120,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
     #region Collision
     private float _frameLeftGrounded = float.MinValue;
     private RaycastHit2D _groundHit;
-    private bool _grounded;
+    private bool _isGrounded;
     private bool _onJumpableSurface;
     private bool _onAnchorableSurface;
     private bool _wasOnJumpableSurface;
@@ -132,9 +133,9 @@ public class PlayerController : MonoBehaviour, IPlayerController
         int currentPlayerLayer = gameObject.layer;
         int layerMask = ~(1 << currentPlayerLayer);
 
-        RaycastHit2D leftGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.min.x, _col.bounds.min.y), Vector2.down, _stats.GroundAndCeilingCheckDistance, layerMask);
+        RaycastHit2D leftGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.min.x + _stats.GroundAndCeilingCheckSidePadding, _col.bounds.min.y), Vector2.down, _stats.GroundAndCeilingCheckDistance, layerMask);
         RaycastHit2D centerGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.center.x, _col.bounds.min.y), Vector2.down, _stats.GroundAndCeilingCheckDistance, layerMask);
-        RaycastHit2D rightGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.max.x, _col.bounds.min.y), Vector2.down, _stats.GroundAndCeilingCheckDistance, layerMask);
+        RaycastHit2D rightGroundHit = Physics2D.Raycast(new Vector2(_col.bounds.max.x - _stats.GroundAndCeilingCheckSidePadding, _col.bounds.min.y), Vector2.down, _stats.GroundAndCeilingCheckDistance, layerMask);
 
         Debug.DrawRay(leftGroundHit.point, Vector2.down * _stats.GroundAndCeilingCheckDistance, Color.green);
         Debug.DrawRay(centerGroundHit.point, Vector2.down * _stats.GroundAndCeilingCheckDistance, Color.green);
@@ -157,9 +158,9 @@ public class PlayerController : MonoBehaviour, IPlayerController
         if (ceilingIsHit) _rb.velocity = new Vector2(_rb.velocity.x, Mathf.Min(0, _rb.velocity.y));
 
         // Landed on the Ground
-        if (!_grounded && groundIsHit)
+        if (!_isGrounded && groundIsHit)
         {
-            _grounded = true;
+            _isGrounded = true;
             _coyoteUsable = true;
             _bufferedJumpUsable = true;
             _endedJumpEarly = false;
@@ -168,9 +169,9 @@ public class PlayerController : MonoBehaviour, IPlayerController
             animController.PlayLandAnimation();
         }
         // Left the Ground
-        else if (_grounded && !groundIsHit)
+        else if (_isGrounded && !groundIsHit)
         {
-            _grounded = false;
+            _isGrounded = false;
             _frameLeftGrounded = _time;
             _wasOnJumpableSurface = _onJumpableSurface;
             _onJumpableSurface = false;
@@ -184,9 +185,13 @@ public class PlayerController : MonoBehaviour, IPlayerController
 
     private void HandlePlayerRotation()
     {
-        if (_grounded || _isAnchored)
+        if (_isGrounded || _isAnchored)
         {
             AlignRotationToGroundNormal();
+        }
+        else if (_isSwinging)
+        {
+            AlignRotationToSwingDirection();
         }
         else
         {
@@ -221,10 +226,28 @@ public class PlayerController : MonoBehaviour, IPlayerController
             transform.rotation = Quaternion.Lerp(
                 transform.rotation,
                 targetRot,
-                Time.deltaTime * _stats.AlignRotationToGroundNormalLerpAmount
+                Time.deltaTime * _stats.AlignRotationLerpAmount
             );
         }
     }
+
+    private void AlignRotationToSwingDirection()
+    {
+
+        if (!_isSwinging) return;
+
+        Vector2 direction = otherPlayer.transform.position - transform.position;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        Quaternion targetRot = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
+
+        transform.rotation = Quaternion.Lerp(
+            transform.rotation,
+            targetRot,
+            Time.deltaTime * _stats.AlignRotationLerpAmount
+        );
+
+    }
+
     #endregion
 
     #region Jumping
@@ -236,14 +259,14 @@ public class PlayerController : MonoBehaviour, IPlayerController
     private float _timeJumpWasPressed;
 
     private bool HasBufferedJump => _bufferedJumpUsable && _time < _timeJumpWasPressed + _stats.JumpBuffer;
-    private bool CanUseCoyote => _coyoteUsable && !_grounded && _time < _frameLeftGrounded + _stats.CoyoteTime && _wasOnJumpableSurface;
-    private bool CanJump => (_grounded && _onJumpableSurface) || CanUseCoyote;
+    private bool CanUseCoyote => _coyoteUsable && !_isGrounded && _time < _frameLeftGrounded + _stats.CoyoteTime && _wasOnJumpableSurface;
+    private bool CanJump => (_isGrounded && _onJumpableSurface) || CanUseCoyote;
 
     private void HandleJump()
     {
         if (_isAnchored) return; // Skip jump handling while anchored
 
-        if (!_endedJumpEarly && !_grounded && !_frameInput.JumpHeld && _rb.velocity.y > 0) _endedJumpEarly = true;
+        if (!_endedJumpEarly && !_isGrounded && !_frameInput.JumpHeld && _rb.velocity.y > 0) _endedJumpEarly = true;
 
         if (!_jumpToConsume && !HasBufferedJump) return;
 
@@ -264,8 +287,8 @@ public class PlayerController : MonoBehaviour, IPlayerController
 
     #endregion
 
-    #region Movement
-    private void HandleDirection()
+    #region Movement On Ground and Air
+    private void HandleHorizontalMovementOnGroundAndAir()
     {
         // if (_frameInput.MoveHorizontal == 0)
         // {
@@ -279,10 +302,10 @@ public class PlayerController : MonoBehaviour, IPlayerController
         //     animController.PlayRunAnimation();
         //     _rb.velocity = new Vector2(Mathf.MoveTowards(_rb.velocity.x, _frameInput.MoveHorizontal * _stats.MaxSpeed, _stats.Acceleration * Time.fixedDeltaTime), _rb.velocity.y);
         // }
-        if (_isAnchored) return; // Skip movement handling while anchored
+        if (_isAnchored || _isSwinging) return; // Skip movement handling while anchored
 
-        float acceleration = _grounded ? _stats.GroundAcceleration : _stats.InAirAcceleration;
-        float deceleration = _grounded ? _stats.GroundDeceleration : _stats.InAirDeceleration;
+        float acceleration = _isGrounded ? _stats.GroundAcceleration : _stats.InAirAcceleration;
+        float deceleration = _isGrounded ? _stats.GroundDeceleration : _stats.InAirDeceleration;
 
         float targetSpeed = _frameInput.MoveHorizontal * _stats.TargetSpeed;
         float speedDifference = targetSpeed - _rb.velocity.x;
@@ -317,7 +340,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
     {
         if (_isAnchored) return; // Skip air resistance while anchored
 
-        if (!_grounded)
+        if (!_isGrounded)
         {
             _rb.velocity = new Vector2(_rb.velocity.x * _stats.AirResistance, _rb.velocity.y);
         }
@@ -330,15 +353,15 @@ public class PlayerController : MonoBehaviour, IPlayerController
     {
         if (_isAnchored) return; // Skip gravity scale handling while anchored
 
-        if (_grounded)
+        if (_isGrounded)
         {
             _rb.gravityScale = _stats.GroundingGravityScaleModifier;
         }
-        else if (!_grounded && _rb.velocity.y < 0f)
+        else if (!_isGrounded && _rb.velocity.y < 0f)
         {
             _rb.gravityScale = _stats.FallingGravityScaleModifier;
         }
-        else if (!_grounded && _rb.velocity.y > 0f)
+        else if (!_isGrounded && _rb.velocity.y > 0f)
         {
             _rb.gravityScale = _stats.InAirGravityScaleModifier;
         }
@@ -358,9 +381,8 @@ public class PlayerController : MonoBehaviour, IPlayerController
     private PositionConstraint _positionConstraint;
     private void HandleAnchoring()
     {
-        if (_frameInput.AnchorHeld && _grounded && !_isAnchored && _onAnchorableSurface)
+        if (_frameInput.AnchorHeld && _isGrounded && !_isAnchored && _onAnchorableSurface && !_isSwinging)
         {
-            //print("Attempting to anchor...");
             // Find the ground object to attach to
             GameObject groundObject = _groundHit.collider?.gameObject;
 
@@ -425,6 +447,58 @@ public class PlayerController : MonoBehaviour, IPlayerController
     #endregion
 
     #region Swinging
+    private bool _isSwinging;
+
+    private void HandleSwinging()
+    {
+        if (!_isGrounded && !_isAnchored && !_isSwinging && otherPlayer._isAnchored)
+        {
+            StartSwinging();
+            Debug.Log("Started swinging");
+        }
+
+        if (_isGrounded && _isSwinging || !otherPlayer._isAnchored && _isSwinging)
+        {
+            StopSwinging();
+            Debug.Log("Stopped swinging");
+        }
+    }
+
+    private void StartSwinging()
+    {
+        _isSwinging = true;
+        HandleHorizontalMovementWhileSwinging();
+    }
+
+    private void StopSwinging()
+    {
+        _isSwinging = false;
+    }
+
+    private void HandleHorizontalMovementWhileSwinging()
+    {
+        // BELOM KELAR
+        float acceleration = _stats.InAirAcceleration;
+        float deceleration = _stats.InAirDeceleration;
+
+        float targetSpeed = _frameInput.MoveHorizontal * _stats.TargetSpeed;
+        float speedDifference = targetSpeed - _rb.velocity.x;
+        float accelerationRate = Mathf.Abs(targetSpeed) < 0.01f ? deceleration : acceleration;
+        float movementX = Mathf.Pow(Mathf.Abs(speedDifference) * accelerationRate, _stats.VelocityPower) * Mathf.Sign(speedDifference);
+
+        if (_frameInput.MoveHorizontal == 0)
+        {
+        }
+        else
+        {
+            _spriteRenderer.flipX = _frameInput.MoveHorizontal < 0;   
+        }
+
+        _rb.AddForce(movementX * transform.forward);
+        
+    }
+    
+
 
     #endregion
 }
