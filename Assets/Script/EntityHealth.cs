@@ -20,7 +20,7 @@ public partial class EntityHealth : MonoBehaviour
         }
         SetHealth(stats.health);
     }
-    public void TakeDamage(float amount)
+    public virtual void TakeDamage(float amount)
     {
         CurrentHealth -= amount;
         if (CurrentHealth <= 0)

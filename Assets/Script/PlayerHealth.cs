@@ -11,10 +11,18 @@ public class PlayerHealth : EntityHealth
     public void Respawn()
     {
         SetHealth(stats.health);
+        GameManager.Instance.RespawnPlayersAtCurrentSpawn();
+    }
+    public override void TakeDamage(float amount)
+    {
+        base.TakeDamage(amount);
+        //Knocback
+        Debug.Log("Player took damage: " + amount + ", Current Health: " + CurrentHealth);
     }
 
-    public void RegenerateHealth(float amount)
+    public override void SetStats(EntityStatsData newStats)
     {
-        SetHealth(CurrentHealth + amount);
+        base.SetStats(newStats);
+        //Unused for now
     }
 }
