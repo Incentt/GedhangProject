@@ -23,6 +23,7 @@ public class GroundEnemyAI : EnemyAI
 
     private void Awake()
     {
+        base.Awake();
         rb = GetComponent<Rigidbody2D>();
         enemyHealth = GetComponent<EnemyHealth>();
 
@@ -64,6 +65,7 @@ public class GroundEnemyAI : EnemyAI
 
     private void Update()
     {
+        base.Update();
         if (!isAlive)
             return;
 
@@ -212,8 +214,9 @@ public class GroundEnemyAI : EnemyAI
         }
     }
 
-    public void Die()
+    public override void Die()
     {
+        base.Die();
         isAlive = false;
         StopPatrolling();
 

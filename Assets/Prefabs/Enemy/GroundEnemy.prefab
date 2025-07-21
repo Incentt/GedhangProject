@@ -83,7 +83,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 2}
+  m_Size: {x: 2.3407223, y: 1.4766666}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -121,8 +121,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.000000010387076, y: -0.5871332}
-  m_Size: {x: 1.6254609, y: 1.0817124}
+  m_Offset: {x: 0.014565581, y: -0.06190469}
+  m_Size: {x: 1.6545944, y: 1.1190885}
   m_Direction: 1
 --- !u!50 &556907568341156105
 Rigidbody2D:

@@ -35,11 +35,13 @@ public abstract class EnemyAI : MonoBehaviour
     protected bool isTouchingWall;
     protected bool isAtLedge;
 
+    private GameObject ShatterParticlePrefab;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         enemyHealth = GetComponent<EnemyHealth>();
+        ShatterParticlePrefab = Resources.Load<GameObject>("PlasticShatter");
 
         if (animator == null)
             animator = GetComponent<Animator>();
@@ -61,7 +63,7 @@ public abstract class EnemyAI : MonoBehaviour
         SetState(EnemyState.Idle);
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         if (currentState == EnemyState.Die)
             return;
@@ -76,6 +78,10 @@ public abstract class EnemyAI : MonoBehaviour
         {
             Turn();
             shouldTurn = false;
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Die();
         }
     }
 
@@ -188,6 +194,9 @@ public abstract class EnemyAI : MonoBehaviour
     public virtual void Die()
     {
         SetState(EnemyState.Die);
+        Instantiate(ShatterParticlePrefab, transform.position, Quaternion.identity);
+        Destroy(gameObject);
+        Debug.Log("Enemy died: " + gameObject.name);
     }
 
     protected virtual void OnDrawGizmosSelected()
