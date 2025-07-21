@@ -1,9 +1,11 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 
 public class SpawnPointWindow : EditorWindow
 {
+
     private SpawnPointController spawnController;
     private Vector2 scrollPosition;
     private int selectedSpawnIndex = 0;
@@ -454,3 +456,4 @@ public class SpawnPointWindow : EditorWindow
         }
     }
 }
+#endif

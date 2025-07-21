@@ -1,7 +1,9 @@
 using UnityEngine;
 using UnityEditor;
+#if UNITY_EDITOR
 
 [CustomEditor(typeof(SpawnPointController))]
+
 public class SpawnPointEditor : Editor
 {
     private SpawnPointController spawnController;
@@ -75,3 +77,5 @@ public class SpawnPointEditor : Editor
         }
     }
 }
+
+#endif
