@@ -130,7 +130,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
     private void CheckCollisions()
     {
         // Ground and Ceiling
-        bool ceilingIsHit = Physics2D.CapsuleCast(new Vector2(_col.bounds.center.x, _col.bounds.center.y), _col.size, _col.direction, 0, Vector2.up, _stats.GroundAndCeilingCheckDistance, ~_stats.PlayerLayer);
+        // bool ceilingIsHit = Physics2D.CapsuleCast(new Vector2(_col.bounds.center.x, _col.bounds.center.y), _col.size, _col.direction, 0, Vector2.up, _stats.GroundAndCeilingCheckDistance, ~_stats.PlayerLayer);
 
         int currentPlayerLayer = gameObject.layer;
         int layerMask = ~(1 << currentPlayerLayer);
