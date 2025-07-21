@@ -6,15 +6,18 @@ public class PlayerHealth : EntityHealth
 {
     public override void Die()
     {
-
+        Respawn();
     }
-    public void Respawn()
+    private void Respawn()
     {
+        //Maybe reset in gameManager?
         SetHealth(stats.health);
+        GetComponent<PlayerController>().otherPlayer.GetComponent<PlayerHealth>()?.SetHealth(stats.health);
         GameManager.Instance.RespawnPlayersAtCurrentSpawn();
     }
     public override void TakeDamage(float amount)
     {
+
         base.TakeDamage(amount);
         //Knocback
         Debug.Log("Player took damage: " + amount + ", Current Health: " + CurrentHealth);

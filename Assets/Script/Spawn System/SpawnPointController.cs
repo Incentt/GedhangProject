@@ -77,7 +77,7 @@ public class SpawnPointController : MonoBehaviour
     {
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.SpawnPlayersAtSpawnPoint(currentSpawnPoint, playerXOffset);
+            GameManager.Instance.TeleportPlayersToSpawnPoint(currentSpawnPoint, playerXOffset);
         }
         else
         {

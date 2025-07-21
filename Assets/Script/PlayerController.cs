@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
     public event Action<bool, float> GroundedChanged;
 
     private SpriteRenderer _spriteRenderer;
-    private PlayerController otherPlayer;
+    public PlayerController otherPlayer { get; private set; }
 
 
     #endregion

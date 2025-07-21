@@ -254,4 +254,8 @@ public class GroundEnemyAI : EnemyAI
             Gizmos.DrawRay(wallCheck.position, wallCheckDirection * aiSettings.wallCheckDistance);
         }
     }
+    protected override void OnCollisionEnter2D(Collision2D collision)
+    {
+        base.OnCollisionEnter2D(collision);
+    }
 }

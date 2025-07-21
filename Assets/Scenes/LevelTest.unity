@@ -336,7 +336,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &885284322
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -466,7 +466,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &995512863
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1663,7 +1663,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2183723390459768974, guid: 2e480154dc5984910a483508368cae52, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6934037605209380858, guid: 2e480154dc5984910a483508368cae52, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1749,6 +1749,18 @@ PrefabInstance:
     - target: {fileID: 131565722945924638, guid: 03139ed1bf8c54e0291eba4e734b6745, type: 3}
       propertyPath: m_Name
       value: GroundEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 556907568341156105, guid: 03139ed1bf8c54e0291eba4e734b6745, type: 3}
+      propertyPath: m_Mass
+      value: 9999
+      objectReference: {fileID: 0}
+    - target: {fileID: 556907568341156105, guid: 03139ed1bf8c54e0291eba4e734b6745, type: 3}
+      propertyPath: m_AngularDrag
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 556907568341156105, guid: 03139ed1bf8c54e0291eba4e734b6745, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4709575381050472759, guid: 03139ed1bf8c54e0291eba4e734b6745, type: 3}
       propertyPath: m_LocalPosition.x

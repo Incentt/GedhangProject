@@ -12,7 +12,7 @@ public abstract class EnemyAI : MonoBehaviour
     [SerializeField] protected EnemyState currentState = EnemyState.Idle;
 
     [Header("Movement")]
-    [SerializeField] protected bool facingRight = true;
+    [SerializeField] protected bool facingRight = false;
     protected Transform groundCheck;
     protected Transform wallCheck;
 
@@ -202,5 +202,16 @@ public abstract class EnemyAI : MonoBehaviour
     protected virtual void OnDrawGizmosSelected()
     {
 
+    }
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
+    {
+        float knockbackForce = 500; //TODO Replace in stats
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            collision.gameObject.GetComponent<PlayerHealth>()?.TakeDamage(enemyStats.attack);
+            Vector2 direction = (collision.transform.position - transform.position).normalized;
+            collision.gameObject.GetComponent<Rigidbody2D>()?.AddForce(direction * knockbackForce, ForceMode2D.Impulse);
+            Debug.Log("Enemy collided with player: " + collision.gameObject.name);
+        }
     }
 }

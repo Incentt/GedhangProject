@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 7039175294281707613}
   - component: {fileID: 3684158003137244352}
   - component: {fileID: 3302337113834444635}
+  - component: {fileID: 2295979165063824598}
   m_Layer: 7
   m_Name: PlayerBase
   m_TagString: Player
@@ -217,3 +218,17 @@ PositionConstraint:
   m_Active: 1
   m_IsLocked: 1
   m_Sources: []
+--- !u!114 &2295979165063824598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3752952667199719155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8fa5602acabf4931b27705562dd356c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats: {fileID: 11400000, guid: 8b7bfa07d16c9439caee4174f07f37af, type: 2}
+  currentHealth: 0

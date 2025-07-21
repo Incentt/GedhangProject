@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: GroundEnemyStats
   m_EditorClassIdentifier: 
   health: 2
-  attack: 0
+  attack: 2

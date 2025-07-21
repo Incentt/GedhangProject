@@ -146,7 +146,7 @@ public class GameManager : MonoBehaviour
         if (spawnPointController != null)
         {
             Transform currentSpawn = spawnPointController.GetCurrentSpawnPoint();
-            RespawnPlayersAtSpawnPoint(currentSpawn, spawnPointController.playerXOffset);
+            TeleportPlayersToSpawnPoint(currentSpawn, spawnPointController.playerXOffset);
         }
         else
         {
