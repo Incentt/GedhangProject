@@ -38,4 +38,11 @@ public class PlayerAnimatorController : MonoBehaviour
             anim.Play("Land");
         }
     }
+    public void PlayCrouchAnimation(bool isCrouching)
+    {
+        if (anim != null && anim.runtimeAnimatorController != null)
+        {
+            anim.SetBool("isCrouching", isCrouching);
+        }
+    }
 }

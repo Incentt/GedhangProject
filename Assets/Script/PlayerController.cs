@@ -150,7 +150,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
         bool currentlyOnJumpableSurface = groundIsHit &&
                             _groundHit.collider != _col &&
                             (_stats.JumpableLayers.value & (1 << _groundHit.collider.gameObject.layer)) != 0;
-        
+
         // Check if we're on a anchorable surface (excluding self)
         bool currentlyOnAnchorableSurface = groundIsHit &&
                               _groundHit.collider != _col &&
@@ -181,7 +181,8 @@ public class PlayerController : MonoBehaviour, IPlayerController
             _wasOnJumpableSurface = _onJumpableSurface;
             _onJumpableSurface = false;
             GroundedChanged?.Invoke(false, 0);
-        } else if (_isGrounded && groundIsHit)
+        }
+        else if (_isGrounded && groundIsHit)
         {
             // Still grounded
             _onJumpableSurface = currentlyOnJumpableSurface;
@@ -211,7 +212,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
     }
 
     private void AlignRotationToGroundNormal()
-    
+
     {
         Vector2 dir = new Vector2(_frameInput.MoveHorizontal * 0.5f, -1);
         float distanceFromPivot = GetComponent<Renderer>().bounds.size.y / 2 + _stats.GroundAndCeilingCheckDistance;
@@ -280,7 +281,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
             ExecuteJump();
             animController.PlayJumpAnimation();
         }
-    
+
 
         _jumpToConsume = false;
     }
@@ -297,12 +298,12 @@ public class PlayerController : MonoBehaviour, IPlayerController
 
     private void ExecuteJumpCut()
     {
-        
+
         // Stop upward movement
         _rb.velocity = new Vector2(_rb.velocity.x, 0);
         // Apply immediate downward force when ending jump early
         _rb.AddForce(new Vector2(0, -_stats.JumpEndEarlyImpulse), ForceMode2D.Impulse);
-        
+
     }
 
     #endregion
@@ -323,7 +324,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
             _col.bounds.center.x + (_col.bounds.size.x / 2 + _stats.EdgeDetectionDistance) * moveDirection,
             _col.bounds.min.y
         );
-        
+
         // Check for wall ahead at player height
         Vector2 airCheckAheadPos = new Vector2(
             _col.bounds.center.x + (_col.bounds.size.x / 2 + _stats.EdgeDetectionDistance) * moveDirection,
@@ -397,7 +398,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
                 _rb.velocity = new Vector2(_rb.velocity.x, -_stats.MaxFallSpeed);
             }
         }
-        
+
     }
 
     #endregion
@@ -475,7 +476,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
         // // Enable constraint
         // _positionConstraint.constraintActive = true;
         // _positionConstraint.enabled = true;
-
+        animController.PlayCrouchAnimation(true);
         // Make rigidbody kinematic
         _rb.bodyType = RigidbodyType2D.Kinematic;
         _rb.velocity = Vector2.zero;
@@ -503,6 +504,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
         // _positionConstraint.constraintActive = false;
 
         // Restore original rigidbody type
+        animController.PlayCrouchAnimation(false);
         _rb.bodyType = _originalBodyType;
     }
 
@@ -561,7 +563,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
         }
         _rb.AddForce(transform.right * input * _stats.SwingImpulse, ForceMode2D.Impulse);
     }
-    
+
 
 
     #endregion
