@@ -24,20 +24,28 @@ MonoBehaviour:
   SnapInput: 1
   VerticalDeadZoneThreshold: 0.3
   HorizontalDeadZoneThreshold: 0.1
-  TargetSpeed: 25
-  GroundAcceleration: 80
-  GroundDeceleration: 80
-  InAirAcceleration: 60
-  InAirDeceleration: 120
-  AirResistance: 0.9
-  VelocityPower: 0.9
-  GroundingGravityScaleModifier: 3
-  GroundAndCeilingCheckDistance: 0.5
-  AlignRotationToGroundNormalLerpAmount: 15
-  JumpPower: 300
-  MaxFallSpeed: 40
-  InAirGravityScaleModifier: 4
-  FallingGravityScaleModifier: 4
-  JumpEndEarlyGravityScaleModifier: 20
+  RunMaxSpeed: 25
+  Acceleration: 18
+  Deceleration: 20
+  InAirAccelerationMultiplier: 0.5
+  InAirDecelerationMultiplier: 0.65
+  GroundAndCeilingCheckDistance: 0.2
+  GroundAndCeilingCheckSidePadding: 0.1
+  EdgeDetectionOffset: 0.4
+  EdgeDetectionDistance: 0.65
+  EdgeDetectionVelYThreshold: -5
+  EdgeUpImpulse: 20
+  JumpImpulse: 200
+  JumpEndEarlyImpulse: 100
   CoyoteTime: 0.15
   JumpBuffer: 0.2
+  JumpHorizontalVelocityMultiplier: 0.2
+  MaxFallSpeed: 40
+  GroundingGravityScaleModifier: 3
+  FloatUpGravityScaleModifier: 4
+  FallingGravityScaleModifier: 5
+  SwingingGravityScaleModifier: 2
+  SwingImpulse: 8
+  MaxSwingVelocity: 150
+  AlignRotationLerpAmount: 40
+  GroundNormalDotThreshold: 0.8

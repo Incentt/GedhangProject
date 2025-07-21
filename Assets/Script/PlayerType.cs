@@ -33,28 +33,21 @@ public class PlayerStats : ScriptableObject
 
     [Header("MOVEMENT")]
     [Tooltip("The top horizontal movement speed")]
-    public float TargetSpeed = 25;
+    public float RunMaxSpeed = 25;
 
-    [Tooltip("The player's capacity to gain horizontal speed at ground")]
-    public float GroundAcceleration = 60;
+    [Tooltip("The player's capacity to gain horizontal speed")]
+    public float Acceleration = 18;
 
-    [Tooltip("The player's capacity to lose horizontal speed at ground")]
-    public float GroundDeceleration = 120;
+    [Tooltip("The player's capacity to lose horizontal speed")]
+    public float Deceleration = 20;
 
-    [Tooltip("The player's capacity to gain horizontal speed at air")]
-    public float InAirAcceleration = 60;
+    [Tooltip("Acceleration multiplier when in air. Helps with air control")]
+    public float InAirAccelerationMultiplier = 0.5f;
 
-    [Tooltip("The player's capacity to lose horizontal speed at air")]
-    public float InAirDeceleration = 120;
+    [Tooltip("Deceleration multiplier when in air. Helps with air control")]
+    public float InAirDecelerationMultiplier = 0.65f;
 
-    [Tooltip("The power applied to the accel or deccel of the player horizontal velocity")]
-    public float AirResistance = 0.95f;
-
-    [Tooltip("The power applied to the accel or deccel of the player horizontal velocity")]
-    public float VelocityPower = 0.9f;
-
-    [Tooltip("Gravity scale multiplier when grounded. Helps on slopes")]
-    public float GroundingGravityScaleModifier = 5f;
+    [Header("Collision Detection")]
 
     [Tooltip("The detection distance for grounding and roof"), Range(0f, 0.5f)]
     public float GroundAndCeilingCheckDistance = 0.2f;
@@ -62,29 +55,66 @@ public class PlayerStats : ScriptableObject
     [Tooltip("The detection padding for grounding and roof"), Range(0f, 0.5f)]
     public float GroundAndCeilingCheckSidePadding = 0.1f;
 
-    [Tooltip("Lerp amount for standing based on normal")]
-    public float AlignRotationLerpAmount = 15f;
+    [Header("Edge Detection")]
+    [Tooltip("The detection offset for edge detection. Helps with ledge detection"), Range(0f, 0.5f)]
+    public float EdgeDetectionOffset = 0.4f;
+
+    [Tooltip("The detection distance for edge detection. Helps with ledge detection")]
+    public float EdgeDetectionDistance = 0.65f;
+
+    [Tooltip("The minimum vertical velocity the player can auto-jump. Helps with ledge detection")]
+    public float EdgeDetectionVelYThreshold = -5f; // Minimum vertical velocity to consider edge detection
+
+    [Tooltip("The impulse applied when jumping from edge detection")]
+    public float EdgeUpImpulse = 20f; // Impulse applied when jumping from an edge
 
     [Header("JUMP")]
     [Tooltip("The immediate velocity applied when jumping")]
-    public float JumpPower = 36;
+    public float JumpImpulse = 200;
 
-    [Tooltip("The maximum vertical movement speed")]
-    public float MaxFallSpeed = 40;
-
-    [Tooltip("The gravity multiplier added when in air")]
-    public float InAirGravityScaleModifier = 4f;
-
-    [Tooltip("The gravity multiplier added when falling")]
-    public float FallingGravityScaleModifier = 4f;
-
-    [Tooltip("The gravity multiplier added when jump is released early")]
-    public float JumpEndEarlyGravityScaleModifier = 8f;
+    [Tooltip("The impulse downward added when jump is released early")]
+    public float JumpEndEarlyImpulse = 100f;
 
     [Tooltip("The time before coyote jump becomes unusable. Coyote jump allows jump to execute even after leaving a ledge")]
     public float CoyoteTime = .15f;
 
     [Tooltip("The amount of time we buffer a jump. This allows jump input before actually hitting the ground")]
     public float JumpBuffer = .2f;
+
+    [Tooltip("Multiplier for horizontal velocity when jumping")]
+    public float JumpHorizontalVelocityMultiplier = 0.2f;
+
+    [Tooltip("The maximum vertical movement speed")]
+    public float MaxFallSpeed = 40;
+
+    [Header("Gravity Scale")]
+
+    [Tooltip("Gravity scale multiplier when grounded. Helps on slopes")]
+    public float GroundingGravityScaleModifier = 3f;
+
+    [Tooltip("The gravity multiplier added when floating upwards")]
+    public float FloatUpGravityScaleModifier = 4f;
+
+    [Tooltip("The gravity multiplier added when falling")]
+    public float FallingGravityScaleModifier = 5f;
+
+    [Tooltip("The gravity multiplier added when swinging")]
+    public float SwingingGravityScaleModifier = 2f;
+
+    [Header("Swinging")]
+
+    [Tooltip("The speed at which the player swings")]
+    public float SwingImpulse = 8f;
+
+    [Tooltip("The maximum velocity the player can reach while swinging")]
+    public float MaxSwingVelocity = 150f;
+
+    [Header("Rotation")]
+    [Tooltip("Lerp amount for standing based on normal")]
+    public float AlignRotationLerpAmount = 40f;
+
+
+    [Tooltip("The minimum dot product value for the ground normal to be considered valid")]
+    public float GroundNormalDotThreshold = 0.8f;
 }
 
