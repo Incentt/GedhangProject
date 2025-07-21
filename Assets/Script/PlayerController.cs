@@ -157,7 +157,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
                               (_stats.AnchorableLayers.value & (1 << _groundHit.collider.gameObject.layer)) != 0;
 
         // Hit a Ceiling
-        if (ceilingIsHit) _rb.velocity = new Vector2(_rb.velocity.x, Mathf.Min(0, _rb.velocity.y));
+        // if (ceilingIsHit) _rb.velocity = new Vector2(_rb.velocity.x, Mathf.Min(0, _rb.velocity.y));
 
         // Landed on the Ground
         if (!_isGrounded && groundIsHit)
