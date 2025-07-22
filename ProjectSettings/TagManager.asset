@@ -44,3 +44,24 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: TreeShadow
+    uniqueID: 3325845253
+    locked: 0
+  - name: Shadow6
+    uniqueID: 2348321331
+    locked: 0
+  - name: Shadow5
+    uniqueID: 2699330585
+    locked: 0
+  - name: Shadow4
+    uniqueID: 1950130453
+    locked: 0
+  - name: Shadow3
+    uniqueID: 1104610417
+    locked: 0
+  - name: Shadow2
+    uniqueID: 3648156235
+    locked: 0
+  - name: Shadow1
+    uniqueID: 531492323
+    locked: 0
