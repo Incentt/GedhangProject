@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.EditorTools;
 using UnityEngine;
 
 public enum PlayerType
@@ -104,10 +105,17 @@ public class PlayerStats : ScriptableObject
     [Header("Swinging")]
 
     [Tooltip("The speed at which the player swings")]
-    public float SwingImpulse = 8f;
+    public float SwingForce = 10f;
 
     [Tooltip("The maximum velocity the player can reach while swinging")]
     public float MaxSwingVelocity = 150f;
+
+    [Tooltip("The constant downward force applied while swinging")]
+    public float SwingBaseDownForce = 10f;
+
+    public float SwingVelocityDownForceMultiplier = 1.2f;
+
+    public float SwingMomentumBonus = 1.2f;
 
     [Header("Rotation")]
     [Tooltip("Lerp amount for standing based on normal")]

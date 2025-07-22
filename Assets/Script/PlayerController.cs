@@ -476,23 +476,13 @@ public class PlayerController : MonoBehaviour, IPlayerController
         // // Enable constraint
         // _positionConstraint.constraintActive = true;
         // _positionConstraint.enabled = true;
+
+        // Play crouch animation
         animController.PlayCrouchAnimation(true);
+
         // Make rigidbody kinematic
         _rb.bodyType = RigidbodyType2D.Kinematic;
         _rb.velocity = Vector2.zero;
-
-        // Set inverted control or not for the other player
-        if (otherPlayer._isGrounded)
-        {
-            otherPlayer._useInvertedSwingingDirection = true;
-        }
-        else
-        {
-            otherPlayer._useInvertedSwingingDirection = false;
-        }
-
-        // Play animation anchoring here
-
     }
 
     private void StopAnchoring()
@@ -503,8 +493,10 @@ public class PlayerController : MonoBehaviour, IPlayerController
         // _positionConstraint.enabled = false;
         // _positionConstraint.constraintActive = false;
 
-        // Restore original rigidbody type
+        // Stop animation
         animController.PlayCrouchAnimation(false);
+
+        // Restore original rigidbody type
         _rb.bodyType = _originalBodyType;
     }
 
@@ -530,6 +522,15 @@ public class PlayerController : MonoBehaviour, IPlayerController
 
         if (_isSwinging)
         {
+            if (transform.position.y < otherPlayer.transform.position.y)
+            {
+                _useInvertedSwingingDirection = true;
+            }
+            else
+            {
+                _useInvertedSwingingDirection = false;
+            }
+
             HandleHorizontalMovementWhileSwinging();
         }
 
@@ -549,19 +550,35 @@ public class PlayerController : MonoBehaviour, IPlayerController
     {
         if (otherPlayer == null || !otherPlayer._isAnchored) return;
 
-        // Determine swing direction based on input
+        Vector2 anchorPoint = otherPlayer.transform.position;
+        Vector2 ropeVector = (Vector2)transform.position - anchorPoint;
+        Vector2 tangent = Vector2.Perpendicular(ropeVector).normalized;
+
+        // Current swing velocity in tangent direction
+        float swingVelocity = Vector2.Dot(_rb.velocity, tangent);
+        
+        // Apply local downward force: base force + velocity-based force
+        float baseDownForce = _stats.SwingBaseDownForce;
+        float velocityDownForce = Mathf.Abs(swingVelocity) * _stats.SwingVelocityDownForceMultiplier;
+        float totalDownForce = baseDownForce + velocityDownForce;
+        
+        Vector2 localDownForce = -transform.up * totalDownForce;
+        _rb.AddForce(localDownForce, ForceMode2D.Force);
+        
         float input = _frameInput.MoveHorizontal;
         if (Mathf.Abs(input) < 0.01f) return;
 
-        // Flip sprite based on input
         _spriteRenderer.flipX = input < 0;
 
-        // Apply swinging force
-        if (_useInvertedSwingingDirection)
+        // Momentum-based force: stronger when adding to existing momentum
+        float momentumFactor = 1f;
+        if (Mathf.Sign(input) == Mathf.Sign(swingVelocity))
         {
-            input = -input; // Invert input if necessary
+            momentumFactor = 1f + (Mathf.Abs(swingVelocity) / _stats.MaxSwingVelocity) * _stats.SwingMomentumBonus;
         }
-        _rb.AddForce(transform.right * input * _stats.SwingImpulse, ForceMode2D.Impulse);
+
+        Vector2 swingForce = tangent * input * _stats.SwingForce * momentumFactor;
+        _rb.AddForce(swingForce, ForceMode2D.Force);
     }
 
 
