@@ -4835,7 +4835,7 @@ SpriteShapeRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_DynamicOccludee: 0
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -6054,6 +6054,14 @@ PrefabInstance:
     - target: {fileID: 6934037605209380858, guid: 2e480154dc5984910a483508368cae52, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8109881202835347280, guid: 2e480154dc5984910a483508368cae52, type: 3}
+      propertyPath: ropeLength
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8109881202835347280, guid: 2e480154dc5984910a483508368cae52, type: 3}
+      propertyPath: ropeSegmentCountHalved
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

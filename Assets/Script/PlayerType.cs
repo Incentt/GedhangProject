@@ -115,6 +115,8 @@ public class PlayerStats : ScriptableObject
 
     public float SwingVelocityDownForceMultiplier = 1.2f;
 
+    public float SwingEndImpulseMultiplier = 5f;
+
     public float SwingMomentumBonus = 1.2f;
 
     [Header("Rotation")]

@@ -314,9 +314,6 @@ public class PlayerController : MonoBehaviour, IPlayerController
         if (_isGrounded || _isAnchored || _isSwinging || _rb.velocity.y < _stats.EdgeDetectionVelYThreshold || Mathf.Abs(_frameInput.MoveHorizontal) < 0.1f) return; // Skip edge detection while grounded or anchored or falling
 
         // Edge detection
-        int currentPlayerLayer = gameObject.layer;
-        int layerMask = ~(1 << currentPlayerLayer);
-
         float moveDirection = Mathf.Sign(_frameInput.MoveHorizontal);
 
         // Check for ground ahead of player's movement
@@ -332,8 +329,8 @@ public class PlayerController : MonoBehaviour, IPlayerController
         );
 
 
-        RaycastHit2D wallCheckHit = Physics2D.Raycast(wallCheckAheadPos, Vector2.right * _frameInput.MoveHorizontal, _stats.EdgeDetectionDistance, layerMask);
-        RaycastHit2D airCheckHit = Physics2D.Raycast(airCheckAheadPos, Vector2.right * _frameInput.MoveHorizontal, _stats.EdgeDetectionDistance, layerMask);
+        RaycastHit2D wallCheckHit = Physics2D.Raycast(wallCheckAheadPos, Vector2.right * _frameInput.MoveHorizontal, _stats.EdgeDetectionDistance, ~_stats.PlayerLayer);
+        RaycastHit2D airCheckHit = Physics2D.Raycast(airCheckAheadPos, Vector2.right * _frameInput.MoveHorizontal, _stats.EdgeDetectionDistance, ~_stats.PlayerLayer);
 
         Debug.DrawRay(wallCheckAheadPos, Vector2.right * _frameInput.MoveHorizontal * _stats.EdgeDetectionDistance, Color.green);
         Debug.DrawRay(airCheckAheadPos, Vector2.right * _frameInput.MoveHorizontal * _stats.EdgeDetectionDistance, Color.green);
@@ -544,6 +541,17 @@ public class PlayerController : MonoBehaviour, IPlayerController
     private void StopSwinging()
     {
         _isSwinging = false;
+
+        Vector2 anchorPoint = otherPlayer.transform.position;
+        Vector2 ropeVector = (Vector2)transform.position - anchorPoint;
+        Vector2 tangent = Vector2.Perpendicular(ropeVector).normalized;
+
+        // Current swing velocity in tangent direction
+        float swingVelocity = Vector2.Dot(_rb.velocity, tangent);
+        
+        // Apply impulse at the end of swing
+        float impulse = swingVelocity * _stats.SwingEndImpulseMultiplier;
+        _rb.AddForce(tangent * impulse, ForceMode2D.Impulse);
     }
 
     private void HandleHorizontalMovementWhileSwinging()
