@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d58ca0370914c4a53984faed11cc405d, type: 3}
-  m_Name: PlayerStats
+  m_Name: PlayerMovement
   m_EditorClassIdentifier: 
   PlayerLayer:
     serializedVersion: 2
