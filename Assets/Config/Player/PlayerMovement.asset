@@ -26,7 +26,7 @@ MonoBehaviour:
   HorizontalDeadZoneThreshold: 0.1
   RunMaxSpeed: 25
   Acceleration: 18
-  Deceleration: 30
+  Deceleration: 100
   InAirAccelerationMultiplier: 0.5
   InAirDecelerationMultiplier: 0.65
   GroundAndCeilingCheckDistance: 0.5
@@ -35,7 +35,7 @@ MonoBehaviour:
   EdgeDetectionDistance: 0.65
   EdgeDetectionVelYThreshold: -5
   EdgeUpImpulse: 20
-  JumpImpulse: 250
+  JumpImpulse: 300
   JumpEndEarlyImpulse: 100
   CoyoteTime: 0.15
   JumpBuffer: 0.2
