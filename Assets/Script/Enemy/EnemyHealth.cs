@@ -5,10 +5,12 @@ using UnityEngine;
 public class EnemyHealth : EntityHealth
 {
     private EnemyAI enemyAI;
+    private GameObject ShatterParticlePrefab;
 
     private void Awake()
     {
         enemyAI = GetComponent<EnemyAI>();
+        ShatterParticlePrefab = Resources.Load<GameObject>("PlasticShatter");
     }
 
     public override void Die()
@@ -18,9 +20,17 @@ public class EnemyHealth : EntityHealth
         {
             enemyAI.Die();
         }
-
-        // Destroy the enemy after a delay (to allow death animation to play)
-        StartCoroutine(DestroyAfterDelay(2f));
+        Instantiate(ShatterParticlePrefab, transform.position, Quaternion.identity);
+        Destroy(gameObject);
+        //StartCoroutine(DestroyAfterDelay(2f));
+    }
+    public override void TakeDamage(float amount)
+    {
+        base.TakeDamage(amount);
+        if (CurrentHealth <= 0)
+        {
+            Die();
+        }
     }
 
     private IEnumerator DestroyAfterDelay(float delay)

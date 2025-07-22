@@ -35,13 +35,11 @@ public abstract class EnemyAI : MonoBehaviour
     protected bool isTouchingWall;
     protected bool isAtLedge;
 
-    private GameObject ShatterParticlePrefab;
 
     protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         enemyHealth = GetComponent<EnemyHealth>();
-        ShatterParticlePrefab = Resources.Load<GameObject>("PlasticShatter");
 
         if (animator == null)
             animator = GetComponent<Animator>();
@@ -117,8 +115,6 @@ public abstract class EnemyAI : MonoBehaviour
     protected virtual void HandleIdleState()
     {
         movement = Vector2.zero;
-
-
     }
 
     protected virtual void HandlePatrolState()
@@ -194,18 +190,33 @@ public abstract class EnemyAI : MonoBehaviour
     public virtual void Die()
     {
         SetState(EnemyState.Die);
-        Instantiate(ShatterParticlePrefab, transform.position, Quaternion.identity);
         Destroy(gameObject);
+        enemyHealth.Die();
         Debug.Log("Enemy died: " + gameObject.name);
+    }
+    public virtual void TakeDamage(float damage)
+    {
+        enemyHealth.TakeDamage(damage);
+        if (spriteRenderer != null)
+            StartCoroutine(FlashRed());
+    }
+
+    private IEnumerator FlashRed()
+    {
+        Color originalColor = spriteRenderer.color;
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        spriteRenderer.color = originalColor;
     }
 
     protected virtual void OnDrawGizmosSelected()
     {
 
     }
+
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        float knockbackForce = 500; //TODO Replace in stats
+        float knockbackForce = enemyStats.knockbackAttack;
         if (collision.gameObject.CompareTag("Player"))
         {
             collision.gameObject.GetComponent<PlayerHealth>()?.TakeDamage(enemyStats.attack);

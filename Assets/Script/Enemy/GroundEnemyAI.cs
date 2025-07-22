@@ -227,6 +227,10 @@ public class GroundEnemyAI : EnemyAI
             animator.SetTrigger(aiSettings.deathAnimationParameter);
         }
     }
+    public override void TakeDamage(float damage)
+    {
+        base.TakeDamage(damage);
+    }
 
     // Debug visualization
     private void OnDrawGizmosSelected()

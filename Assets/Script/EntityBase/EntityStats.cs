@@ -5,4 +5,5 @@ public class EntityStatsData : ScriptableObject
 {
     public int health;
     public int attack;
+    public int knockbackAttack = 500;
 }

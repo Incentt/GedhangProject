@@ -6,6 +6,7 @@ TagManager:
   tags:
   - SpringUnit
   - RopeSegment
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -16,8 +17,8 @@ TagManager:
   - Ground
   - Player1
   - Player2
-  - 
-  - 
+  - Enemy
+  - Rope
   - 
   - 
   - 

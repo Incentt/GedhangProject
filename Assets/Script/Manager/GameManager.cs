@@ -158,4 +158,8 @@ public class GameManager : MonoBehaviour
     {
         return spawnPointController;
     }
+    public float GetRopeDamage()
+    {
+        return currentPlayer1.GetComponent<PlayerHealth>().stats.attack;
+    }
 }
