@@ -16,6 +16,7 @@ public class RopeManager : MonoBehaviour
     public int ropeSegmentCountHalved = 2; // odd please
 
     public float ropeLength = 6f;
+    public GameObject ropeSegmentPrefab;
 
     private List<GameObject> _ropeSegments = new List<GameObject>();
     private float _distanceEachSegment = 2f;
@@ -143,6 +144,8 @@ public class RopeManager : MonoBehaviour
         GameObject ropeSegmentMid = new GameObject("RopeSegmentMid", typeof(Rigidbody2D));
         ropeSegmentMid.tag = "RopeSegment";
         ropeSegmentMid.transform.position = midPoint;
+        Rigidbody2D midRigidBody = ropeSegmentMid.GetComponent<Rigidbody2D>();
+        midRigidBody.mass = 0.0001f;
         ropeSegmentMid.transform.parent = transform; // Set parent to RopeManager
         _ropeSegments.Add(ropeSegmentMid);
 
@@ -152,20 +155,20 @@ public class RopeManager : MonoBehaviour
             {
 
                 Vector3 position = Vector3.Lerp(midPoint, objTarget.transform.position, (float)i / ropeSegmentCountHalved);
-                GameObject ropeSegment = new GameObject("RopeSegment_" + objTarget.name + "_" + i, typeof(Rigidbody2D));
+                GameObject ropeSegment = Instantiate(ropeSegmentPrefab, position, Quaternion.identity);
+                ropeSegment.name = "RopeSegment_" + objTarget.name + "_" + i;
                 ropeSegment.tag = "RopeSegment";
-                ropeSegment.AddComponent<DistanceJoint2D>();
                 ropeSegment.transform.position = position;
 
                 _ropeSegments.Add(ropeSegment);
                 ropeSegment.transform.parent = transform; // Set parent to RopeManager
 
-                ropeSegment.GetComponent<DistanceJoint2D>().connectedBody = _ropeSegments[_ropeSegments.Count - 2].GetComponent<Rigidbody2D>();
-                ropeSegment.GetComponent<DistanceJoint2D>().autoConfigureDistance = false;
-                ropeSegment.GetComponent<DistanceJoint2D>().maxDistanceOnly = true;
+                DistanceJoint2D distanceJoint2D = ropeSegment.GetComponent<DistanceJoint2D>();
+                distanceJoint2D.connectedBody = _ropeSegments[_ropeSegments.Count - 2].GetComponent<Rigidbody2D>();
             }
 
-            objTarget.GetComponent<DistanceJoint2D>().connectedBody = _ropeSegments[_ropeSegments.Count - 1].GetComponent<Rigidbody2D>();
+            DistanceJoint2D playerDistanceJoint2D = objTarget.GetComponent<DistanceJoint2D>();
+            playerDistanceJoint2D.connectedBody = _ropeSegments[_ropeSegments.Count - 1].GetComponent<Rigidbody2D>();
 
             if (objTarget == player1)
             {

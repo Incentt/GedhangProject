@@ -149,7 +149,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa58ceedcb44046169580574ec5c125d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ropeSegmentPrefab: {fileID: 7425892364039644071, guid: 0273913edd64e46ddbec61ee5cbb1dfa, type: 3}
   ropeSegmentCountHalved: 10
-  distancePerSegment: 0.1
-  ropeLengthDefault: 4
+  ropeLength: 6
+  ropeSegmentPrefab: {fileID: 7546172886371242709, guid: 01e481dfafd64425798ffa849e20462d, type: 3}
