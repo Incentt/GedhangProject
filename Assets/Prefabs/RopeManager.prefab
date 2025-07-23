@@ -129,7 +129,7 @@ LineRenderer:
     numCornerVertices: 90
     numCapVertices: 90
     alignment: 0
-    textureMode: 0
+    textureMode: 2
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
@@ -149,6 +149,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa58ceedcb44046169580574ec5c125d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ropeSegmentCountHalved: 10
-  ropeLength: 6
-  ropeSegmentPrefab: {fileID: 7546172886371242709, guid: 01e481dfafd64425798ffa849e20462d, type: 3}
+  _defaultRopeLength: 6
+  _ropeLength: 0
+  _numOfRopeSegments: 50
+  _ropeVerletLengthMultiplier: 0.8
+  _gravityForce: {x: 0, y: -2}
+  _dampingFactor: 0.98
+  _numOfConstraintRuns: 50
