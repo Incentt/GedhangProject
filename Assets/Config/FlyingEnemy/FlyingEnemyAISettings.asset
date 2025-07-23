@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a88184e2eb6804bc9a2c67aa34be2bd6, type: 3}
+  m_Name: FlyingEnemyAISettings
+  m_EditorClassIdentifier: 
+  patrolSpeed: 2
+  stayTime: 1
+  idleAnimation: Idle
+  patrolAnimation: Walk
+  attackAnimation: Attack
+  dieAnimation: Die
+  attackRange: 8
+  dashSpeed: 4
+  dashCooldown: 2
+  hoverHeight: 3
+  playerLayerMask:
+    serializedVersion: 2
+    m_Bits: 384
+  patrolDistance: 3
+  patrolPauseTime: 1
+  isPatrolAnimationParameter: isPatrol
