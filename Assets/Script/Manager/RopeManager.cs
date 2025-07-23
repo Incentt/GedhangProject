@@ -39,8 +39,8 @@ public class RopeManager : MonoBehaviour
     [Header("Constraints")]
     [SerializeField] private int _numOfConstraintRuns = 50;
 
-    private Vector3 _ropeStartPoint;
-    private Vector3 _ropeEndPoint;
+    private Transform _ropeStartPoint;
+    private Transform _ropeEndPoint;
 
     private List<RopeSegment> _ropeSegments = new List<RopeSegment>();
 
@@ -50,27 +50,28 @@ public class RopeManager : MonoBehaviour
         _lineRenderer.positionCount = _numOfRopeSegments;
 
         _ropeLength = _defaultRopeLength;
-        _ropeSegmentLength = (float) _ropeLength / _numOfRopeSegments;
+        _ropeSegmentLength = (float)_ropeLength / _numOfRopeSegments;
     }
 
     private void Start()
     {
         SetRopeLength(_defaultRopeLength);
+        _ropeStartPoint = player1.transform;
+        _ropeEndPoint = player2.transform;
     }
 
 
     private void Update()
     {
-        _ropeStartPoint = player1.transform.position;
-        _ropeEndPoint = player2.transform.position;
+
         UpdateAllLineRendererPointsPosition();
-        SetRopeLength(_ropeLength);
+        //SetRopeLength(_ropeLength);
     }
 
     private void FixedUpdate()
     {
         SimulateRopePhysics();
-        
+
         for (int i = 0; i < _numOfConstraintRuns; i++)
         {
             ApplyConstraints();
@@ -82,15 +83,15 @@ public class RopeManager : MonoBehaviour
         InitializePlayer();
 
         // Rope visual
-        _ropeStartPoint = player1.transform.position;
-        _ropeEndPoint = player2.transform.position;
+        _ropeStartPoint = player1.transform;
+        _ropeEndPoint = player2.transform;
 
-        _ropeSegmentLength = (float) _defaultRopeLength / _numOfRopeSegments;
+        _ropeSegmentLength = (float)_defaultRopeLength / _numOfRopeSegments;
 
         for (int i = 0; i < _numOfRopeSegments; i++)
         {
             float t = (float)i / (_numOfRopeSegments - 1);
-            Vector3 segmentPosition = Vector3.Lerp(_ropeStartPoint, _ropeEndPoint, t);
+            Vector3 segmentPosition = Vector3.Lerp(_ropeStartPoint.position, _ropeEndPoint.position, t);
             _ropeSegments.Add(new RopeSegment(segmentPosition));
         }
 
@@ -277,8 +278,8 @@ public class RopeManager : MonoBehaviour
         // _lineRenderer.SetPositions(ropePositions);
 
         //Use Vector3.Lerp for smoothing
-        Vector3 prevPos = _lineRenderer.GetPosition(0);
-        Vector3 targetPos = player1.transform.position;
+        Vector2 prevPos = _lineRenderer.GetPosition(0);
+        Vector2 targetPos = _ropeStartPoint.position;
         _lineRenderer.SetPosition(0, Vector3.Lerp(prevPos, targetPos, 0.5f));
 
         for (int i = 1; i < _ropeSegments.Count - 1; i++)
@@ -289,8 +290,8 @@ public class RopeManager : MonoBehaviour
         }
 
         prevPos = _lineRenderer.GetPosition(_ropeSegments.Count - 1);
-        targetPos = player2.transform.position;
-        _lineRenderer.SetPosition(_ropeSegments.Count - 1, Vector3.Lerp(prevPos, targetPos, 0.5f));
+        targetPos = _ropeEndPoint.position;
+        _lineRenderer.SetPosition(_ropeSegments.Count - 1, Vector2.Lerp(prevPos, targetPos, 0.5f));
     }
 
     private void SimulateRopePhysics()
@@ -312,8 +313,8 @@ public class RopeManager : MonoBehaviour
     {
         RopeSegment firstSegment = _ropeSegments[0];
         RopeSegment lastSegment = _ropeSegments[_ropeSegments.Count - 1];
-        firstSegment.CurrentPosition = _ropeStartPoint;
-        lastSegment.CurrentPosition = _ropeEndPoint;
+        firstSegment.CurrentPosition = _ropeStartPoint.position;
+        lastSegment.CurrentPosition = _ropeEndPoint.position;
 
         _ropeSegments[0] = firstSegment;
         _ropeSegments[_ropeSegments.Count - 1] = lastSegment;
@@ -376,7 +377,7 @@ public class RopeManager : MonoBehaviour
     public void SetRopeLength(float length)
     {
         _ropeLength = length;
-        _ropeSegmentLength = (float) length / _numOfRopeSegments;
+        _ropeSegmentLength = (float)length / _numOfRopeSegments;
 
         _directJoint.distance = length;
     }
