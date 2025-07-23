@@ -49,7 +49,7 @@ MonoBehaviour:
   MaxSwingVelocity: 150
   SwingBaseDownForce: 20
   SwingVelocityDownForceMultiplier: 10
-  SwingEndImpulseMultiplier: 5
+  SwingEndImpulseMultiplier: 10
   SwingMomentumBonus: 20
   AlignRotationLerpAmount: 40
   GroundNormalDotThreshold: 0.5

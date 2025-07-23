@@ -548,10 +548,11 @@ public class PlayerController : MonoBehaviour, IPlayerController
 
         // Current swing velocity in tangent direction
         float swingVelocity = Vector2.Dot(_rb.velocity, tangent);
-        
+
         // Apply impulse at the end of swing
         float impulse = swingVelocity * _stats.SwingEndImpulseMultiplier;
         _rb.AddForce(tangent * impulse, ForceMode2D.Impulse);
+        otherPlayer._rb.AddForce(tangent * impulse, ForceMode2D.Impulse);
     }
 
     private void HandleHorizontalMovementWhileSwinging()
