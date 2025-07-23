@@ -6060,6 +6060,14 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8109881202835347280, guid: 2e480154dc5984910a483508368cae52, type: 3}
+      propertyPath: ropeSegmentCount
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8109881202835347280, guid: 2e480154dc5984910a483508368cae52, type: 3}
+      propertyPath: _numOfRopeSegments
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 8109881202835347280, guid: 2e480154dc5984910a483508368cae52, type: 3}
       propertyPath: ropeSegmentCountHalved
       value: 3
       objectReference: {fileID: 0}
