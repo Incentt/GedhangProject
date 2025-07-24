@@ -196,6 +196,11 @@ public abstract class EnemyAI : MonoBehaviour
     }
     public virtual void TakeDamage(float damage)
     {
+        if (enemyHealth != null && enemyHealth.IsInvulnerable)
+        {
+            return; // Don't process damage or visual effects if invulnerable
+        }
+
         enemyHealth.TakeDamage(damage);
         if (spriteRenderer != null)
             StartCoroutine(FlashRed());
