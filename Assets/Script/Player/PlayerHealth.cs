@@ -20,7 +20,7 @@ public class PlayerHealth : EntityHealth
 
         base.TakeDamage(amount);
         //Knocback
-        Debug.Log("Player took damage: " + amount + ", Current Health: " + CurrentHealth);
+        //Debug.Log("Player took damage: " + amount + ", Current Health: " + CurrentHealth);
     }
 
     public override void SetStats(EntityStatsData newStats)

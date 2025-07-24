@@ -103,11 +103,6 @@ public class FlyingEnemyAI : EnemyAI
         // Only update player reference if we found someone closer or current player is invalid
         if (closestPlayer != null && (player == null || !player.gameObject.activeInHierarchy || closestDistance < Vector2.Distance(transform.position, player.position)))
         {
-            // Debug info when switching targets
-            if (player != closestPlayer)
-            {
-                Debug.Log($"Flying Enemy switching target to: {closestPlayer.name} (distance: {closestDistance:F2})");
-            }
             player = closestPlayer;
         }
         else if (player != null && !player.gameObject.activeInHierarchy)

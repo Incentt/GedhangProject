@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6934037605209380858}
   - component: {fileID: 5923109143323869738}
   - component: {fileID: 8109881202835347280}
+  - component: {fileID: 8481705127727572340}
   m_Layer: 0
   m_Name: RopeManager
   m_TagString: Untagged
@@ -156,3 +157,18 @@ MonoBehaviour:
   _gravityForce: {x: 0, y: -2}
   _dampingFactor: 0.98
   _numOfConstraintRuns: 50
+--- !u!114 &8481705127727572340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2183723390459768974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27a3f3f773fbb43a98d066745f64d5ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lineRenderer: {fileID: 5923109143323869738}
+  RopeDamage: 0
+  ColliderRadius: 0.1

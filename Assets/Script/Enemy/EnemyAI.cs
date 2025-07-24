@@ -191,7 +191,7 @@ public abstract class EnemyAI : MonoBehaviour
     {
         SetState(EnemyState.Die);
         Destroy(gameObject);
-        enemyHealth.Die();
+        //enemyHealth.Die();
         Debug.Log("Enemy died: " + gameObject.name);
     }
     public virtual void TakeDamage(float damage)
@@ -222,7 +222,7 @@ public abstract class EnemyAI : MonoBehaviour
             collision.gameObject.GetComponent<PlayerHealth>()?.TakeDamage(enemyStats.attack);
             Vector2 direction = (collision.transform.position - transform.position).normalized;
             collision.gameObject.GetComponent<Rigidbody2D>()?.AddForce(direction * knockbackForce, ForceMode2D.Impulse);
-            Debug.Log("Enemy collided with player: " + collision.gameObject.name);
+            //Debug.Log("Enemy collided with player: " + collision.gameObject.name);
         }
     }
 }
