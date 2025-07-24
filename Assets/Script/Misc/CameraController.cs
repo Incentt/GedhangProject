@@ -19,12 +19,19 @@ public class CameraController : MonoBehaviour
     public bool useOrthographic = true;
     public float perspectiveZoomMultiplier = 10f; // For perspective cameras
 
+    [Header("Look Ahead Settings")]
+    public float lookAheadDistance = 12f; // How far ahead to look
+    public float lookAheadSmoothTime = 1.5f; // How smoothly to transition look ahead
+    public float minMovementThreshold = 0.1f; // Minimum movement to trigger look ahead
+
     private Camera cam;
     private Vector3 velocity = Vector3.zero;
     private float targetOrthographicSize;
     private float zoomVelocity = 0f;
     private PlayerController playerController1;
     private PlayerController playerController2;
+    private Vector2 currentLookAhead = Vector2.zero;
+    private Vector2 lookAheadVelocity = Vector2.zero;
 
     void Start()
     {
@@ -91,13 +98,62 @@ public class CameraController : MonoBehaviour
     {
         Vector3 centerPoint = (player1.position + player2.position) / 2f;
 
-        // Apply offset before constraints
+        // Calculate look ahead direction based on players' movement
+        Vector2 lookAheadDirection = GetLookAheadDirection();
+
+        // Smooth the look ahead to avoid jittery camera movement
+        currentLookAhead = Vector2.SmoothDamp(currentLookAhead, lookAheadDirection, ref lookAheadVelocity, lookAheadSmoothTime);
+
+        // Apply look ahead offset
+        centerPoint.x += currentLookAhead.x;
+        centerPoint.y += currentLookAhead.y;
+
+        // Apply manual offset
         centerPoint.x += offset.x;
         centerPoint.y += offset.y;
+
         // Keep original Z position
         centerPoint.z = transform.position.z;
 
         return centerPoint;
+    }
+
+    Vector2 GetLookAheadDirection()
+    {
+        Vector2 combinedDirection = Vector2.zero;
+        int activeMovingPlayers = 0;
+
+        // Get Player 1's movement direction
+        if (playerController1 != null)
+        {
+            Vector2 player1Velocity = playerController1.GetComponent<Rigidbody2D>().velocity;
+            if (player1Velocity.magnitude > minMovementThreshold)
+            {
+                combinedDirection += player1Velocity.normalized;
+                activeMovingPlayers++;
+            }
+        }
+
+        // Get Player 2's movement direction
+        if (playerController2 != null)
+        {
+            Vector2 player2Velocity = playerController2.GetComponent<Rigidbody2D>().velocity;
+            if (player2Velocity.magnitude > minMovementThreshold)
+            {
+                combinedDirection += player2Velocity.normalized;
+                activeMovingPlayers++;
+            }
+        }
+
+        // Average the directions if both players are moving
+        if (activeMovingPlayers > 0)
+        {
+            combinedDirection /= activeMovingPlayers;
+            return combinedDirection * lookAheadDistance;
+        }
+
+        // If no significant movement, gradually return to center
+        return Vector2.zero;
     }
 
     float GetRequiredZoom()
@@ -161,6 +217,13 @@ public class CameraController : MonoBehaviour
         smoothTime = Mathf.Max(0.1f, newSmoothTime);
     }
 
+    public void SetLookAheadSettings(float distance, float smoothTime, float movementThreshold)
+    {
+        lookAheadDistance = Mathf.Max(0f, distance);
+        lookAheadSmoothTime = Mathf.Max(0.1f, smoothTime);
+        minMovementThreshold = Mathf.Max(0f, movementThreshold);
+    }
+
     // Utility method to instantly snap to target (useful for scene transitions)
     public void SnapToTarget()
     {
@@ -185,5 +248,7 @@ public class CameraController : MonoBehaviour
         // Reset velocities
         velocity = Vector3.zero;
         zoomVelocity = 0f;
+        currentLookAhead = Vector2.zero;
+        lookAheadVelocity = Vector2.zero;
     }
 }
