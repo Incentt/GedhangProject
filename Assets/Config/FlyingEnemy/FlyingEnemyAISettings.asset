@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a88184e2eb6804bc9a2c67aa34be2bd6, type: 3}
   m_Name: FlyingEnemyAISettings
   m_EditorClassIdentifier: 
-  patrolSpeed: 2
+  patrolSpeed: 3
   stayTime: 1
   idleAnimation: Idle
   patrolAnimation: Walk
   attackAnimation: Attack
   dieAnimation: Die
   attackRange: 8
-  dashSpeed: 6
+  dashSpeed: 12
   dashCooldown: 2
   hoverHeight: 3
   playerLayerMask:

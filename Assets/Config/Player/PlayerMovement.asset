@@ -45,11 +45,12 @@ MonoBehaviour:
   FloatUpGravityScaleModifier: 4
   FallingGravityScaleModifier: 5
   SwingingGravityScaleModifier: 2
-  SwingForce: 40
-  MaxSwingVelocity: 150
+  SwingForce: 20
+  MaxSwingVelocity: 70
   SwingBaseDownForce: 20
   SwingVelocityDownForceMultiplier: 10
-  SwingEndImpulseMultiplier: 8
+  SwingEndImpulseMultiplier: 5
   SwingMomentumBonus: 20
   AlignRotationLerpAmount: 40
-  GroundNormalDotThreshold: 0.5
+  GroundNormalDotThreshold: 0.2
+  AnchorCooldownTime: 0.2

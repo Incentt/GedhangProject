@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 1384678114990973393}
   - component: {fileID: 1980530879079657952}
   - component: {fileID: 8343476668002949523}
-  - component: {fileID: 5951516708714397871}
-  m_Layer: 0
+  - component: {fileID: 534724948494644698}
+  m_Layer: 6
   m_Name: Basic Sprite Shape
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -157,7 +157,7 @@ MonoBehaviour:
   m_Creator: {fileID: 0}
   m_Modifiers: []
   m_ColliderSegment: []
---- !u!68 &5951516708714397871
+--- !u!68 &534724948494644698
 EdgeCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
