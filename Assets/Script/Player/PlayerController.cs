@@ -501,6 +501,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
 
     #region Swinging
     private bool _isSwinging;
+    public bool isSwinging => _isSwinging;
     private bool _useInvertedSwingingDirection = false;
 
     private void HandleSwinging()

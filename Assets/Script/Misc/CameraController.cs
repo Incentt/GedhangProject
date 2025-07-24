@@ -23,6 +23,8 @@ public class CameraController : MonoBehaviour
     private Vector3 velocity = Vector3.zero;
     private float targetOrthographicSize;
     private float zoomVelocity = 0f;
+    private PlayerController playerController1;
+    private PlayerController playerController2;
 
     void Start()
     {
@@ -39,6 +41,9 @@ public class CameraController : MonoBehaviour
         {
             FindPlayers();
         }
+
+        playerController1 = player1?.GetComponent<PlayerController>();
+        playerController2 = player2?.GetComponent<PlayerController>();
     }
 
     void LateUpdate()
@@ -52,9 +57,16 @@ public class CameraController : MonoBehaviour
 
         // Calculate target position (midpoint between players)
         Vector3 targetPosition = GetCenterPoint();
-
-        // Calculate required zoom based on player distance
-        float requiredZoom = GetRequiredZoom();
+        float requiredZoom;
+        bool isSwinging = (playerController1 != null && playerController1.isSwinging) || (playerController2 != null && playerController2.isSwinging);
+        if (isSwinging)
+        {
+            requiredZoom = maxZoom;
+        }
+        else
+        {
+            requiredZoom = GetRequiredZoom();
+        }
 
         // Smooth camera movement
         SmoothCameraMovement(targetPosition, requiredZoom);

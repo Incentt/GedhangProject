@@ -1976,7 +1976,7 @@ Transform:
   m_GameObject: {fileID: 176440624}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.22102, y: 39.564972, z: -0.5161536}
+  m_LocalPosition: {x: 15.22102, y: 39.564972, z: 7.22}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13354,7 +13354,7 @@ MonoBehaviour:
   player1: {fileID: 0}
   player2: {fileID: 0}
   minZoom: 10
-  maxZoom: 14
+  maxZoom: 15
   zoomBorder: 2
   smoothTime: 0.3
   offset: {x: 0, y: 0}
