@@ -1859,6 +1859,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FlyingEnemy
       objectReference: {fileID: 0}
+    - target: {fileID: 5817924804040845879, guid: b04e10b9c8cba42b386b051dd7820110, type: 3}
+      propertyPath: facingRight
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

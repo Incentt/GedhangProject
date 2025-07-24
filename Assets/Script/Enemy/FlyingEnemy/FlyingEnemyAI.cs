@@ -17,6 +17,7 @@ public class FlyingEnemyAI : EnemyAI
     private float lastDashTime;
     private float dashStartTime; // Track when dash started
     private Vector2 dashDirection;
+    private Vector2 dashTargetPosition; // Store the target position when dash starts
     private Vector2 originalPosition;
 
     // Patrol movement
@@ -64,33 +65,55 @@ public class FlyingEnemyAI : EnemyAI
         // First try to find by tag (more reliable)
         GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
 
-        foreach (GameObject playerObj in playerObjects)
+        if (playerObjects.Length > 0)
         {
-            float distance = Vector2.Distance(transform.position, playerObj.transform.position);
-            if (distance < closestDistance)
+            foreach (GameObject playerObj in playerObjects)
             {
-                closestDistance = distance;
-                closestPlayer = playerObj.transform;
+                if (playerObj != null && playerObj.activeInHierarchy)
+                {
+                    float distance = Vector2.Distance(transform.position, playerObj.transform.position);
+                    if (distance < closestDistance)
+                    {
+                        closestDistance = distance;
+                        closestPlayer = playerObj.transform;
+                    }
+                }
             }
         }
 
         // If no player found by tag, try layer mask as backup
-        if (closestPlayer == null)
+        if (closestPlayer == null && flyingSettings != null)
         {
             Collider2D[] playerColliders = Physics2D.OverlapCircleAll(transform.position, 50f, flyingSettings.playerLayerMask);
 
             foreach (Collider2D collider in playerColliders)
             {
-                float distance = Vector2.Distance(transform.position, collider.transform.position);
-                if (distance < closestDistance)
+                if (collider != null && collider.gameObject.activeInHierarchy)
                 {
-                    closestDistance = distance;
-                    closestPlayer = collider.transform;
+                    float distance = Vector2.Distance(transform.position, collider.transform.position);
+                    if (distance < closestDistance)
+                    {
+                        closestDistance = distance;
+                        closestPlayer = collider.transform;
+                    }
                 }
             }
         }
 
-        player = closestPlayer;
+        // Only update player reference if we found someone closer or current player is invalid
+        if (closestPlayer != null && (player == null || !player.gameObject.activeInHierarchy || closestDistance < Vector2.Distance(transform.position, player.position)))
+        {
+            // Debug info when switching targets
+            if (player != closestPlayer)
+            {
+                Debug.Log($"Flying Enemy switching target to: {closestPlayer.name} (distance: {closestDistance:F2})");
+            }
+            player = closestPlayer;
+        }
+        else if (player != null && !player.gameObject.activeInHierarchy)
+        {
+            player = null;
+        }
     }
 
     protected override void InitializeAI()
@@ -102,7 +125,6 @@ public class FlyingEnemyAI : EnemyAI
         {
             rb.gravityScale = 0f; // Flying enemy shouldn't be affected by gravity
             rb.isKinematic = false; // Make sure it's not kinematic
-            rb.freezeRotation = false; // Allow rotation
         }
         else
         {
@@ -169,11 +191,8 @@ public class FlyingEnemyAI : EnemyAI
 
         lastPlayerCheckTime = Time.time;
 
-        // Periodically refresh closest player (every 2 seconds)
-        if (Time.time % 2f < Time.deltaTime)
-        {
-            FindClosestPlayer();
-        }
+        // Always refresh closest player to detect new players or if current player is no longer closest
+        FindClosestPlayer();
 
         if (player == null)
         {
@@ -192,7 +211,6 @@ public class FlyingEnemyAI : EnemyAI
 
         // Enhanced debug information
         Debug.DrawLine(transform.position, player.position, playerInRange ? Color.red : Color.green);
-
     }
 
     protected override void HandleState()
@@ -271,9 +289,27 @@ public class FlyingEnemyAI : EnemyAI
             return;
         }
 
-        // Move towards target bound
+        // Determine target bound and movement direction
         Vector2 targetBound = movingRight ? rightBound : leftBound;
-        transform.position = Vector2.MoveTowards(transform.position, targetBound, aiSettings.patrolSpeed * Time.deltaTime);
+        Vector2 currentPos = transform.position;
+
+        // Calculate actual movement direction based on target
+        Vector2 directionToTarget = (targetBound - currentPos).normalized;
+
+        // Update facing direction based on actual movement direction
+        bool shouldFaceRight = directionToTarget.x > 0;
+
+        if (shouldFaceRight != facingRight)
+        {
+            facingRight = shouldFaceRight;
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.flipX = !facingRight;
+            }
+        }
+
+        // Move towards target bound
+        transform.position = Vector2.MoveTowards(currentPos, targetBound, aiSettings.patrolSpeed * Time.deltaTime);
 
         // Check if reached the bound
         if (Vector2.Distance(transform.position, targetBound) < 0.1f)
@@ -281,16 +317,6 @@ public class FlyingEnemyAI : EnemyAI
             movingRight = !movingRight;
             isPaused = true;
             patrolTimer = 0f;
-
-            // Face the new direction
-            if (movingRight && !facingRight)
-            {
-                Turn();
-            }
-            else if (!movingRight && facingRight)
-            {
-                Turn();
-            }
         }
     }
 
@@ -324,50 +350,56 @@ public class FlyingEnemyAI : EnemyAI
             }
 
             // Move in straight line using the stored dash direction
-            // Rotation and sprite flip are completely locked during dash
             Vector2 currentPos = transform.position;
             Vector2 targetPos = currentPos + dashDirection * flyingSettings.dashSpeed * Time.deltaTime;
             transform.position = targetPos;
+
+            // Exit early to prevent any rotation updates during dash
+            return;
         }
-        else if (!dashOnCooldown)
+
+        // Only do rotation and sprite updates when NOT dashing and NOT on cooldown
+        if (!isDashing && !dashOnCooldown)
         {
             // Only calculate direction and rotate when NOT dashing (preparing for attack)
             Vector2 directionToPlayer = (player.position - transform.position).normalized;
 
-            // Handle sprite flipping based on player direction
-            if (spriteRenderer != null)
+            // Set sprite flipping based on horizontal direction
+            bool shouldFaceRight = directionToPlayer.x >= 0;
+
+            if (shouldFaceRight != facingRight)
             {
-                if (directionToPlayer.x > 0)
+                facingRight = shouldFaceRight;
+                if (spriteRenderer != null)
                 {
-                    // Player is to the right, face right
-                    facingRight = true;
-                    spriteRenderer.flipX = false;
-                }
-                else if (directionToPlayer.x < 0)
-                {
-                    // Player is to the left, face left
-                    facingRight = false;
-                    spriteRenderer.flipX = true;
+                    spriteRenderer.flipX = !facingRight;
                 }
             }
 
-            // Rotate towards player only when preparing to attack (not during dash)
-            float angle = Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg;
-            if (!facingRight) // If sprite is flipped, mirror the rotation
+            // Use LookAt approach for rotation towards player
+            Vector3 lookDirection = player.position - transform.position;
+
+            if (lookDirection != Vector3.zero)
             {
-                angle = 180f - angle;
+                // For 2D, we want to rotate around the Z axis
+                float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg;
+
+                // When sprite is flipped, we need to adjust the rotation
+                if (!facingRight)
+                {
+                    // Flip both X and Y components when sprite is flipped
+                    angle = Mathf.Atan2(-lookDirection.y, -lookDirection.x) * Mathf.Rad2Deg;
+                }
+
+                transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
             }
-            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         }
 
         // Only return to patrol if player is out of range AND we're not currently dashing
-        // This prevents the jittering when dash is on cooldown but player is still in range
         if (!playerInRange && !isDashing)
         {
             SetState(EnemyState.Patrol);
         }
-        // If dash is on cooldown but player is still in range, stay in attack state but don't dash
-        // This allows the enemy to keep facing/tracking the player even during cooldown
     }
 
     private void StartDashAttack()
@@ -383,32 +415,37 @@ public class FlyingEnemyAI : EnemyAI
         lastDashTime = Time.time;
         dashStartTime = Time.time; // Record when dash started
 
-        // Calculate direction to player and lock rotation at this moment
-        dashDirection = (player.position - transform.position).normalized;
+        // Capture the player's position ONCE when dash starts - this won't change during dash
+        dashTargetPosition = player.position;
 
-        // Set the rotation once when dash starts and lock it
-        float angle = Mathf.Atan2(dashDirection.y, dashDirection.x) * Mathf.Rad2Deg;
+        // Calculate direction to the captured target position
+        dashDirection = (dashTargetPosition - (Vector2)transform.position).normalized;
 
-        // Handle sprite flipping based on dash direction
+        // Set sprite flipping based on horizontal direction
+        facingRight = dashDirection.x >= 0;
         if (spriteRenderer != null)
         {
-            if (dashDirection.x > 0)
-            {
-                // Dashing to the right, face right
-                facingRight = true;
-                spriteRenderer.flipX = false;
-            }
-            else if (dashDirection.x < 0)
-            {
-                // Dashing to the left, face left
-                facingRight = false;
-                spriteRenderer.flipX = true;
-                angle = 180f - angle; // Mirror the rotation for flipped sprite
-            }
+            spriteRenderer.flipX = !facingRight;
         }
 
-        // Lock rotation for the entire dash
-        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        // Use LookAt to rotate towards the target position
+        Vector3 lookDirection = dashTargetPosition - (Vector2)transform.position;
+
+        // Use LookAt for rotation (Unity's LookAt points the forward axis toward target)
+        if (lookDirection != Vector3.zero)
+        {
+            // For 2D, we want to rotate around the Z axis
+            float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg;
+
+            // When sprite is flipped, we need to adjust the rotation
+            if (!facingRight)
+            {
+                // Flip both X and Y components when sprite is flipped
+                angle = Mathf.Atan2(-lookDirection.y, -lookDirection.x) * Mathf.Rad2Deg;
+            }
+
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        }
     }
 
     protected override void OnCollisionEnter2D(Collision2D collision)
@@ -444,45 +481,6 @@ public class FlyingEnemyAI : EnemyAI
 
         // Call base collision handler for other collision types
         base.OnCollisionEnter2D(collision);
-    }
-
-    // Also add trigger detection for better collision handling during dash
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        // Stop dashing and attacking when triggering with anything while dashing
-        if (isDashing)
-        {
-            isDashing = false;
-
-            // If it's the player, deal damage and knockback
-            if (other.CompareTag("Player"))
-            {
-                PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
-                Rigidbody2D playerRb = other.GetComponent<Rigidbody2D>();
-
-                if (playerHealth != null)
-                {
-                    playerHealth.TakeDamage(enemyStats.attack);
-                }
-
-                // Apply knockback to player
-                if (playerRb != null)
-                {
-                    Vector2 knockbackDirection = (other.transform.position - transform.position).normalized;
-                    float knockbackForce = enemyStats.knockbackAttack;
-                    playerRb.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
-                }
-            }
-
-            // Return to patrol state immediately after any collision
-            SetState(EnemyState.Patrol);
-        }
-    }
-
-    private IEnumerator PauseAfterAttack()
-    {
-        yield return new WaitForSeconds(0.5f);
-        SetState(EnemyState.Patrol);
     }
 
     protected override void HandleDieState()
