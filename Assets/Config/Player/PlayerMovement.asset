@@ -39,7 +39,7 @@ MonoBehaviour:
   JumpEndEarlyImpulse: 100
   CoyoteTime: 0.15
   JumpBuffer: 0.2
-  JumpHorizontalVelocityMultiplier: 0.4
+  JumpHorizontalVelocityMultiplier: 0.5
   MaxFallSpeed: 40
   GroundingGravityScaleModifier: 3
   FloatUpGravityScaleModifier: 4
@@ -49,7 +49,7 @@ MonoBehaviour:
   MaxSwingVelocity: 150
   SwingBaseDownForce: 20
   SwingVelocityDownForceMultiplier: 10
-  SwingEndImpulseMultiplier: 10
+  SwingEndImpulseMultiplier: 8
   SwingMomentumBonus: 20
   AlignRotationLerpAmount: 40
   GroundNormalDotThreshold: 0.5
