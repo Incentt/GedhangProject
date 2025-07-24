@@ -19,7 +19,7 @@ MonoBehaviour:
   attackAnimation: Attack
   dieAnimation: Die
   attackRange: 8
-  dashSpeed: 4
+  dashSpeed: 6
   dashCooldown: 2
   hoverHeight: 3
   playerLayerMask:
