@@ -443,7 +443,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
 
         }
 
-        if (!_frameInput.AnchorHeld && _isAnchored)
+        if (!_frameInput.AnchorHeld && _isAnchored || !_isGrounded && _isAnchored)
         {
             StopAnchoring();
         }
@@ -461,7 +461,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
         _originalBodyType = _rb.bodyType;
 
         // Store current position offset from ground
-        Vector3 offset = transform.position - groundObject.transform.position;
+        // Vector3 offset = transform.position - groundObject.transform.position;
 
         // var cs = _positionConstraint.GetSource(0);
         // cs.sourceTransform = groundObject.transform;
@@ -482,7 +482,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
         _rb.velocity = Vector2.zero;
     }
 
-    private void StopAnchoring()
+    public void StopAnchoring()
     {
         _isAnchored = false;
 
