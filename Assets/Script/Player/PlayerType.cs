@@ -126,5 +126,9 @@ public class PlayerStats : ScriptableObject
 
     [Tooltip("The minimum dot product value for the ground normal to be considered valid")]
     public float GroundNormalDotThreshold = 0.8f;
+
+    [Header("Anchoring")]
+    [Tooltip("Cooldown time after stopping anchoring before being able to anchor again")]
+    public float AnchorCooldownTime = 0.2f;
 }
 

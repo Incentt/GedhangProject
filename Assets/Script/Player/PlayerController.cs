@@ -21,7 +21,6 @@ public class PlayerController : MonoBehaviour, IPlayerController
     private SpriteRenderer _spriteRenderer;
     public PlayerController otherPlayer { get; private set; }
 
-
     #endregion
 
     private float _time;
@@ -429,24 +428,53 @@ public class PlayerController : MonoBehaviour, IPlayerController
     // private Transform _originalParent;
     private RigidbodyType2D _originalBodyType;
     // private PositionConstraint _positionConstraint;
+    private float _lastAnchorStopTime;
     private void HandleAnchoring()
     {
-        if (_frameInput.AnchorHeld && _isGrounded && !_isAnchored && _onAnchorableSurface && !_isSwinging)
+        bool inCooldown = _time < _lastAnchorStopTime + _stats.AnchorCooldownTime;
+
+        bool canAnchorNow = _isGrounded && IsCurrentlyOnGround();
+
+        if (_frameInput.AnchorHeld && canAnchorNow && !_isAnchored && !_isSwinging && !inCooldown)
         {
-            // Find the ground object to attach to
-            GameObject groundObject = _groundHit.collider?.gameObject;
+            // Find the ground object to attach to using the current ground hit
+            RaycastHit2D currentGroundHit = Physics2D.Raycast(
+                new Vector2(_col.bounds.center.x, _col.bounds.min.y),
+                Vector2.down,
+                _stats.GroundAndCeilingCheckDistance,
+                ~(1 << gameObject.layer));
 
-            if (groundObject != null)
+            if (currentGroundHit.collider != null)
             {
-                StartAnchoring(groundObject);
+                StartAnchoring(currentGroundHit.collider.gameObject);
             }
-
         }
 
         if (!_frameInput.AnchorHeld && _isAnchored || !_isGrounded && _isAnchored)
         {
             StopAnchoring();
         }
+    }
+    private bool IsCurrentlyOnGround()
+    {
+        int currentPlayerLayer = gameObject.layer;
+        int layerMask = ~(1 << currentPlayerLayer);
+
+        RaycastHit2D centerGroundHit = Physics2D.Raycast(
+            new Vector2(_col.bounds.center.x, _col.bounds.min.y),
+            Vector2.down,
+            0.05f,
+            layerMask);
+
+        bool groundHit = centerGroundHit.collider != null && centerGroundHit.collider != _col;
+
+        if (groundHit)
+        {
+            bool isAnchorable = (_stats.AnchorableLayers.value & (1 << centerGroundHit.collider.gameObject.layer)) != 0;
+            return isAnchorable;
+        }
+
+        return false;
     }
 
     private void StartAnchoring(GameObject groundObject)
@@ -485,6 +513,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
     public void StopAnchoring()
     {
         _isAnchored = false;
+        _lastAnchorStopTime = _time;
 
         // Disable constraint
         // _positionConstraint.enabled = false;
@@ -566,15 +595,15 @@ public class PlayerController : MonoBehaviour, IPlayerController
 
         // Current swing velocity in tangent direction
         float swingVelocity = Vector2.Dot(_rb.velocity, tangent);
-        
+
         // Apply local downward force: base force + velocity-based force
         float baseDownForce = _stats.SwingBaseDownForce;
         float velocityDownForce = Mathf.Abs(swingVelocity) * _stats.SwingVelocityDownForceMultiplier;
         float totalDownForce = baseDownForce + velocityDownForce;
-        
+
         Vector2 localDownForce = -transform.up * totalDownForce;
         _rb.AddForce(localDownForce, ForceMode2D.Force);
-        
+
         float input = _frameInput.MoveHorizontal;
         if (Mathf.Abs(input) < 0.01f) return;
 

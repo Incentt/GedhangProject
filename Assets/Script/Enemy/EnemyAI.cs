@@ -77,10 +77,10 @@ public abstract class EnemyAI : MonoBehaviour
             Turn();
             shouldTurn = false;
         }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Die();
-        }
+        // if (Input.GetKeyDown(KeyCode.Space))
+        // {
+        //     Die();
+        // }
     }
 
     private void FixedUpdate()
@@ -225,6 +225,7 @@ public abstract class EnemyAI : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             collision.gameObject.GetComponent<PlayerHealth>()?.TakeDamage(enemyStats.attack);
+            collision.gameObject.GetComponent<PlayerController>()?.StopAnchoring();
             Vector2 direction = (collision.transform.position - transform.position).normalized;
             collision.gameObject.GetComponent<Rigidbody2D>()?.AddForce(direction * knockbackForce, ForceMode2D.Impulse);
             //Debug.Log("Enemy collided with player: " + collision.gameObject.name);
