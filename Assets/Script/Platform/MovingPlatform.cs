@@ -10,6 +10,7 @@ public class MovingPlatform : MonoBehaviour
     private int currentWaypointIndex = 0;
     [SerializeField] private List<PlayerController> playersOnPlatform = new List<PlayerController>();
     private Vector3 lastPosition;
+    PlayerController[] allPlayers;
 
     private void Start()
     {
@@ -23,6 +24,8 @@ public class MovingPlatform : MonoBehaviour
             platform.transform.position = waypoints[0].position;
         }
         lastPosition = platform.transform.position;
+        allPlayers[0] = GameManager.Instance.currentPlayer1.GetComponent<PlayerController>();
+        allPlayers[1] = GameManager.Instance.currentPlayer2.GetComponent<PlayerController>();
     }
 
     void Update()
@@ -59,8 +62,6 @@ public class MovingPlatform : MonoBehaviour
 
     private void CheckForPlayersOnPlatform()
     {
-        PlayerController[] allPlayers = FindObjectsOfType<PlayerController>();
-
         foreach (PlayerController player in allPlayers)
         {
             if (player == null) continue;
