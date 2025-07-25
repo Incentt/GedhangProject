@@ -45,8 +45,8 @@ MonoBehaviour:
   FloatUpGravityScaleModifier: 4
   FallingGravityScaleModifier: 5
   SwingingGravityScaleModifier: 2
-  SwingForce: 20
-  MaxSwingVelocity: 70
+  SwingForce: 50
+  MaxSwingVelocity: 100
   SwingBaseDownForce: 20
   SwingVelocityDownForceMultiplier: 10
   SwingEndImpulseMultiplier: 5
