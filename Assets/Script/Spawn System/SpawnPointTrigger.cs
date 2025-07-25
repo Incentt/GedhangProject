@@ -23,6 +23,8 @@ public class SpawnPointTrigger : MonoBehaviour
     private bool player2InTrigger = false;
     private SpriteRenderer spriteRenderer;
     private Collider2D triggerCollider;
+    public Sprite activatedSprite;
+    public Sprite deactivatedSprite;
 
 
     private void Start()
@@ -139,15 +141,11 @@ public class SpawnPointTrigger : MonoBehaviour
 
         if (isActivated)
         {
-
-        }
-        else if (player1InTrigger || player2InTrigger)
-        {
-
+            spriteRenderer.sprite = activatedSprite;
         }
         else
         {
-
+            spriteRenderer.sprite = deactivatedSprite;
         }
     }
 

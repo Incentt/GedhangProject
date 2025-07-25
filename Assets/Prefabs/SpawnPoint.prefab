@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6027440140388292516}
   - component: {fileID: 2882551352343873302}
-  - component: {fileID: 5060339114118278025}
   - component: {fileID: 2571118568155442723}
+  - component: {fileID: 4768780940932902179}
   m_Layer: 0
   m_Name: SpawnPoint
   m_TagString: Untagged
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ab61a56bdf004420d9f3e0c7fb1d0bed, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -86,8 +86,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!70 &5060339114118278025
-CapsuleCollider2D:
+--- !u!114 &2571118568155442723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3039726601952174047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b770b03d4e8af4af1846bf75b3894128, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnPointIndex: 0
+  requireBothPlayers: 0
+  activateOnce: 1
+  showActivationEffect: 1
+  audioSource: {fileID: 0}
+  activationSound: {fileID: 0}
+  activatedSprite: {fileID: 21300000, guid: 6ca057f8c6e714355a925876feccb02e, type: 3}
+  deactivatedSprite: {fileID: 21300000, guid: ab61a56bdf004420d9f3e0c7fb1d0bed, type: 3}
+--- !u!61 &4768780940932902179
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -118,24 +138,16 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 1}
-  m_Direction: 0
---- !u!114 &2571118568155442723
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3039726601952174047}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b770b03d4e8af4af1846bf75b3894128, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawnPointIndex: 0
-  requireBothPlayers: 0
-  activateOnce: 1
-  showActivationEffect: 1
-  audioSource: {fileID: 0}
-  activationSound: {fileID: 0}
+  m_Offset: {x: 0, y: 0.052524686}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2.3333333, y: 2.6666667}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2.3333333, y: 2.1647637}
+  m_EdgeRadius: 0
