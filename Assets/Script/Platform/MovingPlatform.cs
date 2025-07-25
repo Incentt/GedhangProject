@@ -8,7 +8,7 @@ public class MovingPlatform : MonoBehaviour
     public Transform[] waypoints;
     public float speed = 2f;
     private int currentWaypointIndex = 0;
-    private List<PlayerController> playersOnPlatform = new List<PlayerController>();
+    [SerializeField] private List<PlayerController> playersOnPlatform = new List<PlayerController>();
     private Vector3 lastPosition;
 
     private void Start()
@@ -88,11 +88,15 @@ public class MovingPlatform : MonoBehaviour
         if (playerCollider == null) return false;
 
         float tolerance = 0.2f;
-        bool isAbovePlatform = player.transform.position.y >= platformCollider.bounds.max.y - tolerance;
+        float playerBottom = playerCollider.bounds.min.y;
+        float platformTop = platformCollider.bounds.max.y;
+
+        bool isOnPlatformSurface = playerBottom >= platformTop - tolerance &&
+                                  playerBottom <= platformTop + tolerance;
         bool isWithinXBounds = player.transform.position.x >= platformCollider.bounds.min.x - tolerance &&
                               player.transform.position.x <= platformCollider.bounds.max.x + tolerance;
 
-        return isAbovePlatform && isWithinXBounds;
+        return isOnPlatformSurface && isWithinXBounds;
     }
 
     private void MovePlayersOnPlatform(Vector3 movementDelta)
