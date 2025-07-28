@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class FlyingEnemyAI : EnemyAI
 {
-    [Header("Flying Enemy Specific")]
-    [SerializeField] private FlyingEnemySettings flyingSettings;
+    // Properties for easy access
+    private FlyingEnemySettings FlyingSettings => aiSettings as FlyingEnemySettings;
 
     // Player detection and targeting
     private Transform player;
@@ -34,7 +34,8 @@ public class FlyingEnemyAI : EnemyAI
     protected override void Awake()
     {
         base.Awake();
-        aiSettings = flyingSettings;
+        // Don't assign settings here anymore, it should be assigned in the inspector
+        // aiSettings = FlyingSettings;
 
         // Find player using layer mask and get the closest one
         FindClosestPlayer();
@@ -43,8 +44,8 @@ public class FlyingEnemyAI : EnemyAI
         originalPosition = transform.position;
 
         // Set up patrol bounds based on original Y position
-        leftBound = new Vector2(originalPosition.x - flyingSettings.patrolDistance, originalPosition.y);
-        rightBound = new Vector2(originalPosition.x + flyingSettings.patrolDistance, originalPosition.y);
+        leftBound = new Vector2(originalPosition.x - FlyingSettings.patrolDistance, originalPosition.y);
+        rightBound = new Vector2(originalPosition.x + FlyingSettings.patrolDistance, originalPosition.y);
     }
 
     protected override void Turn()
@@ -82,9 +83,9 @@ public class FlyingEnemyAI : EnemyAI
         }
 
         // If no player found by tag, try layer mask as backup
-        if (closestPlayer == null && flyingSettings != null)
+        if (closestPlayer == null && FlyingSettings != null)
         {
-            Collider2D[] playerColliders = Physics2D.OverlapCircleAll(transform.position, 50f, flyingSettings.playerLayerMask);
+            Collider2D[] playerColliders = Physics2D.OverlapCircleAll(transform.position, 50f, FlyingSettings.playerLayerMask);
 
             foreach (Collider2D collider in playerColliders)
             {
@@ -173,7 +174,7 @@ public class FlyingEnemyAI : EnemyAI
         HandleState();
 
         // Update dash cooldown
-        if (dashOnCooldown && Time.time - lastDashTime >= flyingSettings.dashCooldown)
+        if (dashOnCooldown && Time.time - lastDashTime >= FlyingSettings.dashCooldown)
         {
             dashOnCooldown = false;
         }
@@ -198,8 +199,8 @@ public class FlyingEnemyAI : EnemyAI
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
         float effectiveAttackRange = (currentState == EnemyState.Attack)
-            ? flyingSettings.attackRange + attackRangeBuffer
-            : flyingSettings.attackRange;
+            ? FlyingSettings.attackRange + attackRangeBuffer
+            : FlyingSettings.attackRange;
 
         bool wasPlayerInRange = playerInRange;
         playerInRange = distanceToPlayer <= effectiveAttackRange;
@@ -238,7 +239,7 @@ public class FlyingEnemyAI : EnemyAI
         // Set patrol animation and reset rotation
         if (animator != null)
         {
-            animator.SetBool(flyingSettings.isPatrolAnimationParameter, true);
+            animator.SetBool(FlyingSettings.isPatrolAnimationParameter, true);
         }
 
         // Reset rotation to 0 during patrol
@@ -258,7 +259,7 @@ public class FlyingEnemyAI : EnemyAI
         // Set patrol animation and reset rotation
         if (animator != null)
         {
-            animator.SetBool(flyingSettings.isPatrolAnimationParameter, true);
+            animator.SetBool(FlyingSettings.isPatrolAnimationParameter, true);
         }
 
         // Reset rotation to 0 during patrol
@@ -276,7 +277,7 @@ public class FlyingEnemyAI : EnemyAI
         if (isPaused)
         {
             patrolTimer += Time.deltaTime;
-            if (patrolTimer >= flyingSettings.patrolPauseTime)
+            if (patrolTimer >= FlyingSettings.patrolPauseTime)
             {
                 isPaused = false;
                 patrolTimer = 0f;
@@ -326,7 +327,7 @@ public class FlyingEnemyAI : EnemyAI
         // Set attack animation (disable patrol animation)
         if (animator != null)
         {
-            animator.SetBool(flyingSettings.isPatrolAnimationParameter, false);
+            animator.SetBool(FlyingSettings.isPatrolAnimationParameter, false);
         }
 
         if (!isDashing && !dashOnCooldown)
@@ -346,7 +347,7 @@ public class FlyingEnemyAI : EnemyAI
 
             // Move in straight line using the stored dash direction
             Vector2 currentPos = transform.position;
-            Vector2 targetPos = currentPos + dashDirection * flyingSettings.dashSpeed * Time.deltaTime;
+            Vector2 targetPos = currentPos + dashDirection * FlyingSettings.dashSpeed * Time.deltaTime;
             transform.position = targetPos;
 
             // Exit early to prevent any rotation updates during dash
@@ -493,24 +494,24 @@ public class FlyingEnemyAI : EnemyAI
         base.OnDrawGizmosSelected();
 
         // Draw attack range
-        if (flyingSettings != null)
+        if (FlyingSettings != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, flyingSettings.attackRange);
+            Gizmos.DrawWireSphere(transform.position, FlyingSettings.attackRange);
 
             // Draw hysteresis buffer zone
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, flyingSettings.attackRange + attackRangeBuffer);
+            Gizmos.DrawWireSphere(transform.position, FlyingSettings.attackRange + attackRangeBuffer);
 
             // Draw hover height indicator
             Gizmos.color = Color.blue;
-            Vector3 hoverPos = new Vector3(transform.position.x, transform.position.y + flyingSettings.hoverHeight, transform.position.z);
+            Vector3 hoverPos = new Vector3(transform.position.x, transform.position.y + FlyingSettings.hoverHeight, transform.position.z);
             Gizmos.DrawWireCube(hoverPos, Vector3.one * 0.5f);
 
             // Draw patrol bounds
             Gizmos.color = Color.cyan;
-            Vector3 leftBoundPos = new Vector3(originalPosition.x - flyingSettings.patrolDistance, originalPosition.y, transform.position.z);
-            Vector3 rightBoundPos = new Vector3(originalPosition.x + flyingSettings.patrolDistance, originalPosition.y, transform.position.z);
+            Vector3 leftBoundPos = new Vector3(originalPosition.x - FlyingSettings.patrolDistance, originalPosition.y, transform.position.z);
+            Vector3 rightBoundPos = new Vector3(originalPosition.x + FlyingSettings.patrolDistance, originalPosition.y, transform.position.z);
             Gizmos.DrawWireCube(leftBoundPos, Vector3.one * 0.3f);
             Gizmos.DrawWireCube(rightBoundPos, Vector3.one * 0.3f);
             Gizmos.DrawLine(leftBoundPos, rightBoundPos);

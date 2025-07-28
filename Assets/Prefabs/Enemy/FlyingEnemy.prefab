@@ -185,11 +185,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyStats: {fileID: 11400000, guid: 9dcd747da67b74044ae3266b54ab37f1, type: 2}
+  aiSettings: {fileID: 11400000, guid: 29f0f7a3097204a19b83f35f5304c726, type: 2}
   currentState: 0
   facingRight: 1
   animator: {fileID: 7285581565115766252}
   spriteRenderer: {fileID: 8791598718234025660}
-  flyingSettings: {fileID: 11400000, guid: 29f0f7a3097204a19b83f35f5304c726, type: 2}
 --- !u!114 &7189285999575593831
 MonoBehaviour:
   m_ObjectHideFlags: 0

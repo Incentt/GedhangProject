@@ -8,7 +8,7 @@ public abstract class EnemyAI : MonoBehaviour
     [Header("Enemy Stats")]
     public EntityStatsData enemyStats;
     [Header("AI Configuration")]
-    protected EnemyAISettings aiSettings;
+    [SerializeField] protected EnemyAISettings aiSettings;
     [SerializeField] protected EnemyState currentState = EnemyState.Idle;
 
     [Header("Movement")]

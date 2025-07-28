@@ -3,9 +3,6 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class GroundEnemyAI : EnemyAI
 {
-    [Header("AI Configuration")]
-    [SerializeField] private new GroundEnemyAISettings aiSettings;
-
     // State management
     private bool isPatrolling = true;
     private bool isAlive = true;
@@ -13,15 +10,16 @@ public class GroundEnemyAI : EnemyAI
     private bool isPaused = false;
 
     // Properties for easy access
-    private float PatrolSpeed => aiSettings.patrolSpeed;
-    private float PauseTime => aiSettings.stayTime;
-    private LayerMask GroundLayer => aiSettings.groundLayer;
-    private LayerMask WallLayer => aiSettings.wallLayer;
-    private bool TurnOnWallHit => aiSettings.turnOnWallHit;
-    private bool TurnOnLedge => aiSettings.turnOnLedge;
-    private bool PauseBeforeTurn => aiSettings.pauseBeforeTurn;
+    private GroundEnemyAISettings GroundSettings => aiSettings as GroundEnemyAISettings;
+    private float PatrolSpeed => GroundSettings?.patrolSpeed ?? 2f;
+    private float PauseTime => GroundSettings?.stayTime ?? 1f;
+    private LayerMask GroundLayer => GroundSettings?.groundLayer ?? 1;
+    private LayerMask WallLayer => GroundSettings?.wallLayer ?? 1;
+    private bool TurnOnWallHit => GroundSettings?.turnOnWallHit ?? true;
+    private bool TurnOnLedge => GroundSettings?.turnOnLedge ?? true;
+    private bool PauseBeforeTurn => GroundSettings?.pauseBeforeTurn ?? true;
 
-    private void Awake()
+    protected override void Awake()
     {
         base.Awake();
         rb = GetComponent<Rigidbody2D>();
@@ -35,7 +33,7 @@ public class GroundEnemyAI : EnemyAI
         InitializeAI();
     }
 
-    private void InitializeAI()
+    protected override void InitializeAI()
     {
         base.InitializeAI();
         // Set up ground and wall check points if they don't exist
@@ -63,7 +61,7 @@ public class GroundEnemyAI : EnemyAI
         StartPatrolling();
     }
 
-    private void Update()
+    protected override void Update()
     {
         base.Update();
         if (!isAlive)
@@ -90,20 +88,20 @@ public class GroundEnemyAI : EnemyAI
         }
     }
 
-    private void CheckEnvironment()
+    protected override void CheckEnvironment()
     {
         if (groundCheck == null || wallCheck == null)
             return;
 
         // Check if grounded
         Vector2 groundCheckPos = groundCheck.position;
-        isGrounded = Physics2D.OverlapCircle(groundCheckPos, aiSettings.groundCheckRadius, GroundLayer);
+        isGrounded = Physics2D.OverlapCircle(groundCheckPos, GroundSettings?.groundCheckRadius ?? 0.1f, GroundLayer);
 
         // Check for ledge (only when grounded)
         if (isGrounded)
         {
-            Vector2 ledgeCheckPos = groundCheckPos + Vector2.right * (facingRight ? aiSettings.detectionDistance : -aiSettings.detectionDistance);
-            isAtLedge = !Physics2D.OverlapCircle(ledgeCheckPos, aiSettings.groundCheckRadius, GroundLayer);
+            Vector2 ledgeCheckPos = groundCheckPos + Vector2.right * (facingRight ? (GroundSettings?.detectionDistance ?? 1f) : -(GroundSettings?.detectionDistance ?? 1f));
+            isAtLedge = !Physics2D.OverlapCircle(ledgeCheckPos, GroundSettings?.groundCheckRadius ?? 0.1f, GroundLayer);
         }
         else
         {
@@ -113,17 +111,17 @@ public class GroundEnemyAI : EnemyAI
         // Check for wall
         Vector2 wallCheckPos = wallCheck.position;
         Vector2 wallCheckDirection = facingRight ? Vector2.right : Vector2.left;
-        RaycastHit2D wallHit = Physics2D.Raycast(wallCheckPos, wallCheckDirection, aiSettings.wallCheckDistance, WallLayer);
+        RaycastHit2D wallHit = Physics2D.Raycast(wallCheckPos, wallCheckDirection, GroundSettings?.wallCheckDistance ?? 0.3f, WallLayer);
         isTouchingWall = wallHit.collider != null;
 
         // Debug visualization
-        Debug.DrawRay(wallCheckPos, wallCheckDirection * aiSettings.wallCheckDistance, isTouchingWall ? Color.red : Color.white);
-        Debug.DrawLine(groundCheckPos, groundCheckPos + Vector2.down * aiSettings.groundCheckRadius, isGrounded ? Color.green : Color.red);
+        Debug.DrawRay(wallCheckPos, wallCheckDirection * (GroundSettings?.wallCheckDistance ?? 0.3f), isTouchingWall ? Color.red : Color.white);
+        Debug.DrawLine(groundCheckPos, groundCheckPos + Vector2.down * (GroundSettings?.groundCheckRadius ?? 0.1f), isGrounded ? Color.green : Color.red);
 
         if (isGrounded)
         {
-            Vector2 ledgeCheckPos = groundCheckPos + Vector2.right * (facingRight ? aiSettings.detectionDistance : -aiSettings.detectionDistance);
-            Debug.DrawLine(ledgeCheckPos, ledgeCheckPos + Vector2.down * aiSettings.groundCheckRadius, isAtLedge ? Color.red : Color.blue);
+            Vector2 ledgeCheckPos = groundCheckPos + Vector2.right * (facingRight ? (GroundSettings?.detectionDistance ?? 1f) : -(GroundSettings?.detectionDistance ?? 1f));
+            Debug.DrawLine(ledgeCheckPos, ledgeCheckPos + Vector2.down * (GroundSettings?.groundCheckRadius ?? 0.1f), isAtLedge ? Color.red : Color.blue);
         }
     }
 
@@ -169,7 +167,7 @@ public class GroundEnemyAI : EnemyAI
         }
     }
 
-    private void Turn()
+    protected override void Turn()
     {
         facingRight = !facingRight;
 
@@ -208,9 +206,9 @@ public class GroundEnemyAI : EnemyAI
 
     private void SetWalkingAnimation(bool isWalking)
     {
-        if (animator != null && !string.IsNullOrEmpty(aiSettings.walkingAnimationParameter))
+        if (animator != null && !string.IsNullOrEmpty(GroundSettings?.walkingAnimationParameter))
         {
-            animator.SetBool(aiSettings.walkingAnimationParameter, isWalking);
+            animator.SetBool(GroundSettings.walkingAnimationParameter, isWalking);
         }
     }
 
@@ -222,9 +220,9 @@ public class GroundEnemyAI : EnemyAI
 
         rb.velocity = Vector2.zero;
         // Play death animation
-        if (animator != null && !string.IsNullOrEmpty(aiSettings.deathAnimationParameter))
+        if (animator != null && !string.IsNullOrEmpty(GroundSettings?.deathAnimationParameter))
         {
-            animator.SetTrigger(aiSettings.deathAnimationParameter);
+            animator.SetTrigger(GroundSettings.deathAnimationParameter);
         }
     }
     public override void TakeDamage(float damage)
@@ -233,21 +231,21 @@ public class GroundEnemyAI : EnemyAI
     }
 
     // Debug visualization
-    private void OnDrawGizmosSelected()
+    protected override void OnDrawGizmosSelected()
     {
-        if (aiSettings == null)
+        if (GroundSettings == null)
             return;
 
         // Draw ground check
         if (groundCheck != null)
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(groundCheck.position, aiSettings.groundCheckRadius);
+            Gizmos.DrawWireSphere(groundCheck.position, GroundSettings.groundCheckRadius);
 
             // Draw ledge check position
-            Vector2 ledgeCheckPos = groundCheck.position + Vector3.right * (facingRight ? aiSettings.detectionDistance : -aiSettings.detectionDistance);
+            Vector2 ledgeCheckPos = groundCheck.position + Vector3.right * (facingRight ? GroundSettings.detectionDistance : -GroundSettings.detectionDistance);
             Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(ledgeCheckPos, aiSettings.groundCheckRadius);
+            Gizmos.DrawWireSphere(ledgeCheckPos, GroundSettings.groundCheckRadius);
         }
 
         // Draw wall check
@@ -255,7 +253,7 @@ public class GroundEnemyAI : EnemyAI
         {
             Gizmos.color = Color.red;
             Vector3 wallCheckDirection = facingRight ? Vector3.right : Vector3.left;
-            Gizmos.DrawRay(wallCheck.position, wallCheckDirection * aiSettings.wallCheckDistance);
+            Gizmos.DrawRay(wallCheck.position, wallCheckDirection * GroundSettings.wallCheckDistance);
         }
     }
     protected override void OnCollisionEnter2D(Collision2D collision)
